@@ -1,6 +1,9 @@
 package by.khomenko.nsp.webcat.entity;
 
-public class Stock {
+import lombok.Data;
+
+@Data
+public class Stock extends Entity {
 
     private Integer productId;
     private Integer amountInStock;

@@ -1,7 +1,9 @@
 package by.khomenko.nsp.webcat.entity;
 
-public class Category {
+import lombok.Data;
 
+@Data
+public class Category extends Entity {
 
     private Integer categoryId;
     private String categoryName;

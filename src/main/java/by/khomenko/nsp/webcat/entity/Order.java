@@ -1,8 +1,11 @@
 package by.khomenko.nsp.webcat.entity;
 
+import lombok.Data;
+
 import java.util.Date;
 
-public class Order {
+@Data
+public class Order extends Entity {
 
     private Integer orderId;
     private Integer customerId;

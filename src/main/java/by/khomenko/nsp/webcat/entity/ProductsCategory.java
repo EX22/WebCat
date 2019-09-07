@@ -1,6 +1,9 @@
 package by.khomenko.nsp.webcat.entity;
 
-public class ProductsCategory {
+import lombok.Data;
+
+@Data
+public class ProductsCategory extends Entity {
 
     private Integer productId;
     private Integer categoryId;
