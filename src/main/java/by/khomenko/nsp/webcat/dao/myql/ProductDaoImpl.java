@@ -101,7 +101,7 @@ public class ProductDaoImpl extends BaseDaoImpl<Product> implements ProductDao {
         String sql = "UPDATE products SET category_id = ?, product_name = ?,"
                 + " product_description = ?, product_price = ?, product_discount = ?,"
                 + " in_stock = ?, photo_path = ?, seo_attributes = ?"
-                + " WHERE id = ?";
+                + " WHERE product_id = ?";
 
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
 
@@ -123,11 +123,17 @@ public class ProductDaoImpl extends BaseDaoImpl<Product> implements ProductDao {
     @Override
     public void delete(Integer identity) throws PersistentException {
 
+        String sql = "DELETE FROM products WHERE product_id = ?";
+
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setInt(1, identity);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            LOGGER.error("Deleting product an exception occurred. ", e);
+            throw new PersistentException(e);
+        }
+
     }
 
-
-    @Override
-    public int count() throws PersistentException {
-        return 0;
-    }
 }
