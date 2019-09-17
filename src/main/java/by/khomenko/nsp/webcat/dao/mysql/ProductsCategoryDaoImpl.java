@@ -1,4 +1,4 @@
-package by.khomenko.nsp.webcat.dao.myql;
+package by.khomenko.nsp.webcat.dao.mysql;
 
 import by.khomenko.nsp.webcat.dao.ProductsCategoryDao;
 import by.khomenko.nsp.webcat.entity.ProductsCategory;

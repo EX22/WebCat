@@ -8,7 +8,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Product</title>
+  <title>Blog</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
@@ -21,16 +21,12 @@
 <div class="container-fluid">
 
     <jsp:include page="headmenu.jsp"/>
-    <h1>Product</h1>
+    <h1>Blog</h1>
 
     <ul class="breadcrumb">
       <li class="breadcrumb-item"><a href="starterpage.html">Home</a></li>
-      <li class="breadcrumb-item"><a href="catalog.html">Catalog</a></li>
-      <li class="breadcrumb-item"><a href="category.html">Category</a></li>
-      <li class="breadcrumb-item active">Product</li>
+      <li class="breadcrumb-item active">Blog</li>
     </ul>
-
-
 
 
 </div>

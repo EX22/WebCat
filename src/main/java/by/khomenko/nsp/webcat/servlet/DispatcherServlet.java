@@ -1,5 +1,7 @@
 package by.khomenko.nsp.webcat.servlet;
 
+import by.khomenko.nsp.webcat.dao.DaoFactory;
+import by.khomenko.nsp.webcat.dao.pool.ConnectionPool;
 import by.khomenko.nsp.webcat.exception.PersistentException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -20,6 +22,15 @@ import java.io.IOException;
                 "/signin.html", "/cart.html", "/checkout.html"})
 
 public class DispatcherServlet extends HttpServlet {
+
+    //TODO Probable se Descriptor file instead of constants.
+    private static final String DB_DRIVER_CLASS = "com.mysql.cj.jdbc.Driver";
+    private static final String DB_URL = "jdbc:mysql://localhost:3306/web_cat?useUnicode=true&characterEncoding=UTF-8&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
+    private static final String DB_USER = "web_cat_user";
+    private static final String DB_PASSWORD = "web_cat_password";
+    private static final int DB_POOL_START_SIZE = 10;
+    private static final int DB_POOL_MAX_SIZE = 1000;
+    private static final int DB_POOL_CHECK_CONNECTION_TIMEOUT = 0;
 
     /**
      * Instance of logger that provides logging capability for this class'
@@ -49,6 +60,12 @@ public class DispatcherServlet extends HttpServlet {
                 case "/catalog.html":
 
                     request.getRequestDispatcher("WEB-INF/jsp/catalog.jsp")
+                            .forward(request, response);
+                    break;
+
+                case "/blog.html":
+
+                    request.getRequestDispatcher("WEB-INF/jsp/blog.jsp")
                             .forward(request, response);
                     break;
 
@@ -114,6 +131,16 @@ public class DispatcherServlet extends HttpServlet {
     @Override
     public void init() throws ServletException {
         super.init();
+
+        try {
+            ConnectionPool.getInstance().init(DB_DRIVER_CLASS, DB_URL, DB_USER,
+                    DB_PASSWORD, DB_POOL_START_SIZE, DB_POOL_MAX_SIZE,
+                    DB_POOL_CHECK_CONNECTION_TIMEOUT);
+            DaoFactory.getInstance().init("mysql");
+        } catch (PersistentException e) {
+            LOGGER.error("It is impossible to initialize application", e);
+            destroy();
+        }
 
     }
 
