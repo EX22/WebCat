@@ -3,6 +3,7 @@ package by.khomenko.nsp.webcat.servlet;
 import by.khomenko.nsp.webcat.dao.DaoFactory;
 import by.khomenko.nsp.webcat.dao.pool.ConnectionPool;
 import by.khomenko.nsp.webcat.exception.PersistentException;
+import by.khomenko.nsp.webcat.servlet.command.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -13,11 +14,13 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @MultipartConfig
 @WebServlet(
         name = "DispatcherServlet",
-        urlPatterns = {"/starterpage.html", "/catalog.html", "/category.html",
+        urlPatterns = {"/starterpage.html", "/catalog.html", "/blog.html", "/category.html",
                 "/product.html", "/profile.html", "/registration.html",
                 "/signin.html", "/cart.html", "/checkout.html"})
 
@@ -39,6 +42,24 @@ public class DispatcherServlet extends HttpServlet {
     private static final Logger LOGGER
             = LogManager.getLogger(DispatcherServlet.class);
 
+    private static Map<String, Class<? extends BaseCommand>> command = new ConcurrentHashMap<>();
+
+    static {
+
+        command.put("/blog", BlogCommand.class);
+        command.put("/cart", CartCommand.class);
+        command.put("/catalog", CatalogCommand.class);
+        command.put("/category", CategoryCommand.class);
+        command.put("/checkout", CheckOutCommand.class);
+
+        command.put("/product", ProductCommand.class);
+        command.put("/profile", ProfileCommand.class);
+        command.put("/registration", RegistrationCommand.class);
+        command.put("/signin", SignInCommand.class);
+        command.put("/starterpage", StarterPageCommand.class);
+
+    }
+
     @Override
     protected void doGet(HttpServletRequest request,
                          HttpServletResponse response)
@@ -47,6 +68,8 @@ public class DispatcherServlet extends HttpServlet {
         int length = request.getContextPath().length();
         String s = request.getRequestURI().substring(length);
 
+
+        //TODO Get rid of switch/case statement below in favour of Command pattern implementation.
         try {
 
             switch (s) {
@@ -69,7 +92,7 @@ public class DispatcherServlet extends HttpServlet {
                             .forward(request, response);
                     break;
 
-                case "//category.html":
+                case "/category.html":
 
                     request.getRequestDispatcher("WEB-INF/jsp//category.jsp")
                             .forward(request, response);
@@ -125,6 +148,11 @@ public class DispatcherServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request,
                           HttpServletResponse response)
             throws ServletException, IOException {
+
+        int length = request.getContextPath().length();
+        String s = request.getRequestURI().substring(length);
+
+
 
     }
 
