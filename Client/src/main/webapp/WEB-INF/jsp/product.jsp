@@ -30,7 +30,28 @@
       <li class="breadcrumb-item active">Product</li>
     </ul>
 
+    <pre>
+      <c:forEach var="product" items="${product}" varStatus="loop">
+          <c:out value="${product}"/>
+      </c:forEach>
+    </pre>
 
+    <div class="card mb-4 shadow-sm">
+      <div class="card-header">
+        <h4 class="my-0 font-weight-normal">"${product.productName}"</h4>
+      </div>
+      <div class="card-body">
+        <h1 class="card-title pricing-card-title">"${product.productPrice}" <small class="text-muted">/ $</small></h1>
+        <ul class="list-unstyled mt-3 mb-4">
+          <li><c:out value="${product.shortDescription}"/></li>
+          <li>10 GB of storage</li>
+          <li>Priority email support</li>
+          <li>Help center access</li>
+        </ul>
+        <button type="button" class="btn btn-lg btn-block btn-primary">Buy it now</button>
+        <button type="button" class="btn btn-lg btn-block btn-primary">Add to cart</button>
+      </div>
+    </div>
 
 
 </div>

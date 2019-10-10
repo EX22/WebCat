@@ -20,7 +20,7 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
     }
 
     @Override
-    public Integer create(Order entity) throws PersistentException {
+    public Integer create(Order order) throws PersistentException {
         return null;
     }
 
@@ -30,7 +30,7 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
     }
 
     @Override
-    public void update(Order entity) throws PersistentException {
+    public void update(Order order) throws PersistentException {
 
     }
 
