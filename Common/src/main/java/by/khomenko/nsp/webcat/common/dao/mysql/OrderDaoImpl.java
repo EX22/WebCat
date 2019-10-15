@@ -3,8 +3,16 @@ package by.khomenko.nsp.webcat.common.dao.mysql;
 import by.khomenko.nsp.webcat.common.dao.OrderDao;
 import by.khomenko.nsp.webcat.common.entity.Order;
 import by.khomenko.nsp.webcat.common.exception.PersistentException;
+import com.sun.org.apache.xpath.internal.operations.Or;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
 
@@ -21,12 +29,94 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
 
     @Override
     public Integer create(Order order) throws PersistentException {
-        return null;
+        String sql = "INSERT INTO orders (customer_id, order_price,"
+                + " order_status, date, shipping_address) VALUES (?, ?, ?, ?, ?)";
+
+        try (PreparedStatement statement = connection.prepareStatement(sql,
+                Statement.RETURN_GENERATED_KEYS)) {
+
+            statement.setInt(2, order.getCustomerId());
+            statement.setDouble(3, order.getOrderPrice());
+            statement.setString(4, order.getOrderStatus());
+            statement.setString(5, order.getOrderDate());
+            statement.setString(6, order.getShippingAddress());
+            statement.executeUpdate();
+
+            try (ResultSet resultSet = statement.getGeneratedKeys()) {
+
+                if (resultSet.next()) {
+                    return resultSet.getInt(1);
+                } else {
+                    LOGGER.error("There is no autoincremented index after"
+                            + " trying to add record into table `orders`");
+                    throw new PersistentException();
+                }
+            }
+        } catch (SQLException e) {
+            LOGGER.error("Creating order an exception occurred. ", e);
+            throw new PersistentException(e);
+        }
     }
 
     @Override
     public Order read(Integer identity) throws PersistentException {
-        return null;
+        String sql = "SELECT customer_id, order_price, order_status,"
+                + " date, shipping_address"
+                + " FROM orders WHERE order_id = ?";
+
+
+        try (PreparedStatement statement = connection.prepareStatement(sql);
+             ResultSet resultSet = statement.executeQuery()) {
+
+            statement.setInt(1, identity);
+
+            Order order = null;
+            if (resultSet.next()) {
+                order = new Order();
+                order.setOrderId(identity);
+                order.setCustomerId(resultSet.getInt("customer_id"));
+                order.setOrderPrice(resultSet.getDouble("order_price"));
+                order.setOrderStatus(resultSet.getString("order_status"));
+                order.setOrderDate(resultSet.getString("date"));
+                order.setShippingAddress(resultSet.getString("shipping_address"));
+
+            }
+            return order;
+        } catch (SQLException e) {
+            LOGGER.error("Reading from table `orders`"
+                    + " an exception occurred. ", e);
+            throw new PersistentException(e);
+        }
+    }
+
+    @Override
+    public List<Order> readOrdersByCustomerId(Integer customerId) throws PersistentException {
+        String sql = "SELECT order_id, order_price, order_status,"
+                + " date, shipping_address"
+                + " FROM orders WHERE customer_id = ?";
+
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            List<Order> ordersList = new ArrayList<>();
+
+            try (ResultSet resultSet = statement.executeQuery()) {
+
+                while (resultSet.next()) {
+                    Order order
+                            = new Order(resultSet.getInt("order_id"),
+                            resultSet.getInt("customer_id"),
+                            resultSet.getDouble("order_price"),
+                            resultSet.getString("order_status"),
+                            resultSet.getString("date"),
+                            resultSet.getString("shipping_address"));
+                    ordersList.add(order);
+                }
+            }
+            return ordersList;
+        } catch (SQLException e) {
+            LOGGER.error("Reading orders by customer id an exception occurred. ", e);
+            throw new PersistentException(e);
+        }
     }
 
     @Override

@@ -1,11 +1,17 @@
 package by.khomenko.nsp.webcat.common.servlet.command;
 
+import by.khomenko.nsp.webcat.common.dao.CustomerDao;
+import by.khomenko.nsp.webcat.common.dao.DaoFactory;
+import by.khomenko.nsp.webcat.common.entity.Customer;
+import by.khomenko.nsp.webcat.common.exception.PersistentException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ProfileCommand implements BaseCommand {
 
@@ -16,10 +22,33 @@ public class ProfileCommand implements BaseCommand {
     private static final Logger LOGGER
             = LogManager.getLogger(ProfileCommand.class);
 
+    private Map<String, Object> load(Integer customerId) throws PersistentException {
+
+        Map<String, Object> map = new HashMap<>();
+
+
+        try (CustomerDao customerDao = DaoFactory.getInstance().createDao(CustomerDao.class)) {
+
+            Customer customer = customerDao.read(customerId);
+            map.put("customer", customer);
+
+        } catch (Exception e) {
+            LOGGER.error("Loading profile page an exception occurred.", e);
+            throw new PersistentException(e);
+        }
+
+        return map;
+    }
+
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         try {
+
+            Map<String, Object> product = load(Integer.parseInt(request.getParameter("customerId")));
+            for (String key : product.keySet()) {
+                request.setAttribute(key, product.get(key));
+            }
 
             request.getRequestDispatcher("WEB-INF/jsp/profile.jsp")
                     .forward(request, response);

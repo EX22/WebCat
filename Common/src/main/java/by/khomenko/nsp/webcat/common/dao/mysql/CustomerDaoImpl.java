@@ -51,7 +51,32 @@ public class CustomerDaoImpl extends BaseDaoImpl<Customer> implements CustomerDa
 
     @Override
     public Customer read(Integer identity) throws PersistentException {
-        return null;
+        String sql = "SELECT * FROM customers WHERE id = ?";
+
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setInt(1, identity);
+            Customer customer = null;
+
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    customer = new Customer();
+                    customer.setId(identity);
+                    customer.setLogin(resultSet.getString("login"));
+                    customer.setPassword(resultSet.getString("password"));
+                    customer.setContacts(resultSet.getString("contacts"));
+                    customer.setIp(resultSet.getString("ip"));
+                    customer.setLocation(resultSet.getString("location"));
+                    customer.setStatus(resultSet.getString("customer_status"));
+                    customer.setDiscount(resultSet.getDouble("discount"));
+
+                }
+            }
+            return customer;
+        } catch (SQLException e) {
+            LOGGER.error("Reading table `customers` an exception occurred. ", e);
+            throw new PersistentException(e);
+        }
     }
 
     @Override

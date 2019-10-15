@@ -1,9 +1,13 @@
 package by.khomenko.nsp.webcat.common.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
+@NoArgsConstructor
+@AllArgsConstructor
 @Data
 public class Order extends Entity {
 
@@ -11,7 +15,7 @@ public class Order extends Entity {
     private Integer customerId;
     private double orderPrice;
     private String orderStatus;
-    private Date orderDate;
+    private String orderDate;
     private String shippingAddress;
 
 

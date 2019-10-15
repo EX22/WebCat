@@ -1,6 +1,7 @@
 package by.khomenko.nsp.webcat.common.dao.mysql;
 
 import by.khomenko.nsp.webcat.common.dao.ProductDao;
+import by.khomenko.nsp.webcat.common.entity.Category;
 import by.khomenko.nsp.webcat.common.entity.Product;
 import by.khomenko.nsp.webcat.common.exception.PersistentException;
 import org.apache.logging.log4j.LogManager;
@@ -133,6 +134,43 @@ public class ProductDaoImpl extends BaseDaoImpl<Product> implements ProductDao {
             throw new PersistentException(e);
         }
     }
+
+    @Override
+    public List<Product> readProductsByCategoryId(Integer categoryId) throws PersistentException {
+        String sql = "SELECT product_name, short_description, full_description,"
+                + " product_price, product_discount, in_stock, photo_path, seo_attributes"
+                + " FROM products WHERE category_id = ?";
+
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            List<Product> productsList = new ArrayList<>();
+
+            try (ResultSet resultSet = statement.executeQuery()) {
+
+                while (resultSet.next()) {
+                    Product product
+                            = new Product(resultSet.getInt("product_id"),
+                            resultSet.getInt("category_id"),
+                            resultSet.getString("product_name"),
+                            resultSet.getString("short_description"),
+                            resultSet.getString("full_description"),
+                            resultSet.getDouble("product_price"),
+                            resultSet.getDouble("product_discount"),
+                            resultSet.getString("in_stock"),
+                            resultSet.getString("photo_path"),
+                            resultSet.getString("seo_attributes"),
+                            resultSet.getString("output_marker"));
+                    productsList.add(product);
+                }
+            }
+            return productsList;
+        } catch (SQLException e) {
+            LOGGER.error("Reading all products an exception occurred. ", e);
+            throw new PersistentException(e);
+        }
+    }
+
+
 
     @Override
     public void update(Product product) throws PersistentException {

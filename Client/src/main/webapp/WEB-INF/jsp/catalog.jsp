@@ -30,6 +30,12 @@
 
     <div id="demo" class="carousel slide" data-ride="carousel">
 
+      <pre>
+        <c:forEach var="category" items="${categories}" varStatus="loop">
+            <c:out value="${category}"/>
+        </c:forEach>
+      </pre>
+
       <!-- Indicators -->
       <ul class="carousel-indicators">
         <li data-target="#demo" data-slide-to="0" class="active"></li>
@@ -49,6 +55,8 @@
           <img src="pictures/imgSix.jpg" alt="Grocery">
         </div>
       </div>
+
+
 
       <!-- Left and right controls -->
       <a class="carousel-control-prev" href="#demo" data-slide="prev">
