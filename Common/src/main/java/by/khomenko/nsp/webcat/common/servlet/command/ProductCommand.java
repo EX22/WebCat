@@ -45,9 +45,9 @@ public class ProductCommand implements BaseCommand {
 
         try {
 
-            Map<String, Object> product = load(Integer.parseInt(request.getParameter("id")));
-            for (String key : product.keySet()) {
-                request.setAttribute(key, product.get(key));
+            Map<String, Object> productMap = load(Integer.parseInt(request.getParameter("id")));
+            for (String key : productMap.keySet()) {
+                request.setAttribute(key, productMap.get(key));
             }
 
             request.getRequestDispatcher("WEB-INF/jsp/product.jsp")

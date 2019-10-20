@@ -7,10 +7,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class Stock extends Entity {
+public class Cart extends Entity {
 
-    private Integer productId;
-    private Integer amountInStock;
 
+    Integer customerId;
+    Integer productId;
 
 }

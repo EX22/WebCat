@@ -47,9 +47,9 @@ public class StarterPageCommand implements BaseCommand {
 
         try {
 
-            Map<String, Object> productsMap = load();
-            for (String key : productsMap.keySet()) {
-                request.setAttribute(key, productsMap.get(key));
+            Map<String, Object> homePageMap = load();
+            for (String key : homePageMap.keySet()) {
+                request.setAttribute(key, homePageMap.get(key));
             }
 
             request.getRequestDispatcher("WEB-INF/jsp/starterpage.jsp")

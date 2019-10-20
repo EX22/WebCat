@@ -51,12 +51,13 @@ public class CategoryCommand implements BaseCommand {
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
+
         try {
 
-            Map<String, Object> productsCategoriesMap
+            Map<String, Object> categoryMap
                     = load(Integer.parseInt(request.getParameter("categoryId")));
-            for (String key : productsCategoriesMap.keySet()) {
-                request.setAttribute(key, productsCategoriesMap.get(key));
+            for (String key : categoryMap.keySet()) {
+                request.setAttribute(key, categoryMap.get(key));
             }
 
             request.getRequestDispatcher("WEB-INF/jsp/category.jsp")

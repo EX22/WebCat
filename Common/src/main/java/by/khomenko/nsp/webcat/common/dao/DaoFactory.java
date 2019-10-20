@@ -47,8 +47,8 @@ public class DaoFactory {
     @SuppressWarnings("unchecked")
     public <T extends Dao<?>> T createDao(Class<T> key) throws PersistentException {
         Class value = classes.get(key);
-        LOGGER.error(key);
-        LOGGER.error(classes);
+        /*LOGGER.error(key);
+        LOGGER.error(classes);*/
         if(value != null) {
             try {
                 Object dao = value.newInstance();

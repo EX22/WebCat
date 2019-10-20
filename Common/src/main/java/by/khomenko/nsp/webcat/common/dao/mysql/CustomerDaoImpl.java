@@ -51,7 +51,8 @@ public class CustomerDaoImpl extends BaseDaoImpl<Customer> implements CustomerDa
 
     @Override
     public Customer read(Integer identity) throws PersistentException {
-        String sql = "SELECT * FROM customers WHERE id = ?";
+        String sql = "SELECT customer_id, login, password, name, contacts phone_number, "
+                + "email, ip, location, customer_status, discount FROM customers WHERE id = ?";
 
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
 
@@ -64,7 +65,10 @@ public class CustomerDaoImpl extends BaseDaoImpl<Customer> implements CustomerDa
                     customer.setId(identity);
                     customer.setLogin(resultSet.getString("login"));
                     customer.setPassword(resultSet.getString("password"));
+                    customer.setName(resultSet.getString("name"));
                     customer.setContacts(resultSet.getString("contacts"));
+                    customer.setPhoneNumber(resultSet.getString("phone_number"));
+                    customer.setEmail(resultSet.getString("email"));
                     customer.setIp(resultSet.getString("ip"));
                     customer.setLocation(resultSet.getString("location"));
                     customer.setStatus(resultSet.getString("customer_status"));
@@ -77,6 +81,40 @@ public class CustomerDaoImpl extends BaseDaoImpl<Customer> implements CustomerDa
             LOGGER.error("Reading table `customers` an exception occurred. ", e);
             throw new PersistentException(e);
         }
+    }
+
+    @Override
+    public void updateCustomerName(Integer customerId, String name) throws PersistentException {
+
+        String sql = "UPDATE customers SET name = ? WHERE id = ?";
+
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setString(1, name);
+            statement.setInt(2, customerId);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            LOGGER.error("Updating customer's name an exception occurred. ", e);
+            throw new PersistentException(e);
+        }
+
+    }
+
+    @Override
+    public void updateCustomerPass(Integer customerId, String password) throws PersistentException {
+
+        String sql = "UPDATE customers SET password = ? WHERE id = ?";
+
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setString(1, password);
+            statement.setInt(2, customerId);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            LOGGER.error("Updating customer's password an exception occurred. ", e);
+            throw new PersistentException(e);
+        }
+
     }
 
     @Override

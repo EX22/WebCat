@@ -16,6 +16,7 @@
     <dependencies>
 
     <dependency>
+        <scope>compile</scope>
         <groupId>by.khomenko</groupId>
         <artifactId>Common</artifactId>
         <version>1.0-SNAPSHOT</version>

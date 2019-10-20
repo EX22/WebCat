@@ -20,7 +20,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @MultipartConfig
 @WebServlet(
         name = "DispatcherServlet",
-        urlPatterns = {"/starterpage.html", "/catalog.html", "/blog.html", "/category.html",
+        urlPatterns = {"/", "/starterpage.html", "/catalog.html", "/blog.html", "/category.html",
                 "/product.html", "/profile.html", "/registration.html",
                 "/signin.html", "/cart.html", "/checkout.html"})
 
@@ -46,6 +46,7 @@ public class DispatcherServlet extends HttpServlet {
 
     static {
 
+        command.put("/", StarterPageCommand.class);
         command.put("/blog.html", BlogCommand.class);
         command.put("/cart.html", CartCommand.class);
         command.put("/catalog.html", CatalogCommand.class);

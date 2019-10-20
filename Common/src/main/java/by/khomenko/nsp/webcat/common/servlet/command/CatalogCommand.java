@@ -46,9 +46,9 @@ public class CatalogCommand implements BaseCommand {
 
         try {
 
-            Map<String, Object> categoryMap = load();
-            for (String key : categoryMap.keySet()) {
-                request.setAttribute(key, categoryMap.get(key));
+            Map<String, Object> catalogMap = load();
+            for (String key : catalogMap.keySet()) {
+                request.setAttribute(key, catalogMap.get(key));
             }
 
             request.getRequestDispatcher("WEB-INF/jsp/catalog.jsp")

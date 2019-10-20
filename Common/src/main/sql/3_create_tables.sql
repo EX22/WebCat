@@ -10,6 +10,21 @@ COLLATE='utf8_general_ci'
 ENGINE=InnoDB
 ;
 
+CREATE TABLE IF NOT EXISTS `cart` (
+	`cart_id` INT(11) NOT NULL AUTO_INCREMENT,
+	`customer_id` INT(11) NOT NULL,
+	`product_id` INT(11) NOT NULL,
+	PRIMARY KEY (`cart_id`),
+	INDEX `FK_cart_customers` (`customer_id`),
+	INDEX `FK_cart_products` (`product_id`),
+	CONSTRAINT `FK_cart_customers` FOREIGN KEY (`customer_id`) REFERENCES `customers` (`customer_id`),
+	CONSTRAINT `FK_cart_products` FOREIGN KEY (`product_id`) REFERENCES `products` (`product_id`)
+)
+COLLATE='utf8_general_ci'
+ENGINE=InnoDB
+;
+
+
 CREATE TABLE IF NOT EXISTS `category` (
 	`category_id` INT(11) NOT NULL,
 	`category_name` VARCHAR(255) NOT NULL,
@@ -24,18 +39,22 @@ ENGINE=InnoDB
 
 CREATE TABLE IF NOT EXISTS `customers` (
 	`customer_id` INT(11) NOT NULL AUTO_INCREMENT,
-	`login` VARCHAR(255) NOT NULL DEFAULT '0',
-	`password` VARCHAR(255) NOT NULL DEFAULT '0',
-	`contacts` VARCHAR(255) NOT NULL DEFAULT '0',
-	`ip` VARCHAR(255) NOT NULL DEFAULT '0',
-	`location` VARCHAR(255) NOT NULL DEFAULT '0',
-	`customer_status` VARCHAR(64) NOT NULL DEFAULT '0',
-	`discount` DOUBLE NOT NULL DEFAULT '0',
+	`login` VARCHAR(150) NOT NULL,
+	`password` VARCHAR(250) NOT NULL,
+	`name` VARCHAR(250) NOT NULL,
+	`contacts` VARCHAR(355) NOT NULL,
+	`phone_number` VARCHAR(355) NOT NULL,
+	`email` VARCHAR(355) NOT NULL,
+	`ip` VARCHAR(150) NOT NULL,
+	`location` VARCHAR(250) NOT NULL,
+	`customer_status` VARCHAR(150) NOT NULL,
+	`discount` DOUBLE NOT NULL,
 	PRIMARY KEY (`customer_id`)
 )
 COLLATE='utf8_general_ci'
 ENGINE=InnoDB
 ;
+
 
 CREATE TABLE IF NOT EXISTS `orders` (
 	`order_id` INT(11) NOT NULL,

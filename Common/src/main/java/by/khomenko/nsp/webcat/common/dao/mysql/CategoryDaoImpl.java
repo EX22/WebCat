@@ -108,6 +108,7 @@ public class CategoryDaoImpl extends BaseDaoImpl<Category> implements CategoryDa
                     categoryList.add(category);
                 }
             }
+            LOGGER.error("categoryList");
             return categoryList;
         } catch (SQLException e) {
             LOGGER.error("Reading all categories an exception occurred. ", e);
