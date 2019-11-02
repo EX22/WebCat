@@ -46,6 +46,14 @@ public class CartCommand implements BaseCommand {
 
         try {
 
+            String productId = request.getParameter("id");
+
+            if(productId != null){
+                //TODO Cart's item quantity
+                response.getWriter().print("100");
+                return;
+            }
+
             Map<String, Object> cartMap = load(Integer.parseInt(request.getParameter("customerId")));
             for (String key : cartMap.keySet()) {
                 request.setAttribute(key, cartMap.get(key));

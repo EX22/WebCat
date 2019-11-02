@@ -55,7 +55,7 @@ public class CategoryCommand implements BaseCommand {
         try {
 
             Map<String, Object> categoryMap
-                    = load(Integer.parseInt(request.getParameter("categoryId")));
+                    = load(Integer.parseInt(request.getParameter("id")));
             for (String key : categoryMap.keySet()) {
                 request.setAttribute(key, categoryMap.get(key));
             }

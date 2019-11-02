@@ -24,30 +24,11 @@ public class RegistrationCommand implements BaseCommand {
     private static final Logger LOGGER
             = LogManager.getLogger(RegistrationCommand.class);
 
-    /*private Map<String, Object> load() throws PersistentException {
-
-        Map<String, Object> map = new HashMap<>();
-
-
-        try (CustomerDao customerDao = DaoFactory.getInstance().createDao(CustomerDao.class)) {
-
-            Customer customer = customerDao.create();
-
-
-            map.put("customer", customer);
-
-
-        } catch (Exception e) {
-            LOGGER.error("Loading registration page an exception occurred.", e);
-            throw new PersistentException(e);
-        }
-
-        return map;
-    }*/
 
     private Integer createCustomer(String login, String pass, String confirmPass)
             throws PersistentException, ValidationException {
-        Integer userId;
+
+        Integer customerId;
 
         try (CustomerDao customerDao = DaoFactory.getInstance().createDao(CustomerDao.class)) {
 
@@ -56,51 +37,57 @@ public class RegistrationCommand implements BaseCommand {
                         + " are not equal");
             }
 
-            /*if (customerDao.isUserExist(login)) {
-                throw new ValidationException("User already exists");
-            }*/
+            if (customerDao.isCustomerExist(login)) {
+                throw new ValidationException("Customer already exists");
+            }
             Customer customer = new Customer();
             customer.setLogin(login);
             customer.setPassword(pass);
-            userId = customerDao.create(customer);
+            customerId = customerDao.create(customer);
 
         } catch (ValidationException e) {
-            LOGGER.error("Creating customer an exception occurred. ", e);
+            LOGGER.error("Creating customer an exception in RegistrationCommand class occurred. ", e);
             throw new ValidationException(e.getMessage());
         }catch (Exception e) {
-            LOGGER.error("Creating customer an exception occurred. ", e);
+            LOGGER.error("Creating customer an exception in RegistrationCommand class occurred. ", e);
             throw new PersistentException(e);
         }
 
-        return userId;
+        return customerId;
     }
 
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
+
         try {
 
-            String rps = request.getParameter("login");
-            String rpps = request.getParameter("password");
-            String rpcps = request.getParameter("confirmPassword");
+            String login = request.getParameter("login");
+            String password = request.getParameter("password");
+            String confirmPassword = request.getParameter("confirmPassword");
 
+            if (login == null && password == null && confirmPassword == null) {
+                request.getRequestDispatcher("WEB-INF/jsp/registration.jsp")
+                        .forward(request, response);
+                return;
+            }
 
-            Integer rUserId;
+            Integer registeredCustomerId;
             try {
-                rUserId = createCustomer(rps, rpps, rpcps);
-                request.getSession().setAttribute("userId", rUserId);
+
+                registeredCustomerId = createCustomer(login, password, confirmPassword);
+                request.getSession().setAttribute("customerId", registeredCustomerId);
                 response.sendRedirect("profile.html");
 
             } catch (ValidationException e) {
 
                 request.setAttribute("errorMessage", e.getMessage());
-                request.setAttribute("regLogin", rps);
+                request.setAttribute("regLogin", login);
                 request.getRequestDispatcher("WEB-INF/jsp/registration.jsp")
                         .forward(request, response);
             }
 
-            request.getRequestDispatcher("WEB-INF/jsp/registration.jsp")
-                    .forward(request, response);
+
 
         } catch (Exception e) {
             LOGGER.error("An exception in execute method in RegistrationCommand class occurred.", e);

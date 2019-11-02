@@ -51,15 +51,13 @@
             </c:choose>
             <div class="carousel-item ${isActive}">
                 <a href="product.html?id=${product.productId}">
-                 <img src="/images/${product.photoPath}" class="img-fluid" alt="Responsive image">
-                     <div>
+                    <img src="/images/${product.photoPath}" class="img-fluid" alt="Responsive image">
+                    <div>
                         <c:out value = "${product.productName}"/>
-                     </div>
-                 </a>
+                    </div>
+                </a>
             </div>
-
         </c:forEach>
-
       </div>
 
       <!-- Left and right controls -->

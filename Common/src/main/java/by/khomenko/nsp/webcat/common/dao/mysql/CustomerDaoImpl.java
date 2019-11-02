@@ -118,6 +118,26 @@ public class CustomerDaoImpl extends BaseDaoImpl<Customer> implements CustomerDa
     }
 
     @Override
+    public boolean isCustomerExist(String login) throws PersistentException {
+
+        String sql = "SELECT id FROM customers WHERE login = ?";
+
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setString(1, login);
+
+            try (ResultSet resultSet = statement.executeQuery()) {
+
+                return resultSet.next();
+            }
+        } catch (SQLException e) {
+            LOGGER.error("Checking if customer exists"
+                    + " an exception occurred. ", e);
+            throw new PersistentException(e);
+        }
+    }
+
+    @Override
     public void update(Customer customer) throws PersistentException {
 
     }

@@ -30,8 +30,9 @@ public class DaoFactory {
         if ("mysql".equals(implementation)){
 
             classes.put(AdministrationDao.class, AdministrationDaoImpl.class);
+            classes.put(CartDao.class, CartDaoImpl.class);
             classes.put(CategoryDao.class, CategoryDaoImpl.class);
-            classes.put(CustomerDao.class, CategoryDaoImpl.class);
+            classes.put(CustomerDao.class, CustomerDaoImpl.class);
             classes.put(OrderDao.class, OrderDaoImpl.class);
             classes.put(OrderDetailsDao.class, OrderDetailsDaoImpl.class);
             classes.put(ProductDao.class, ProductDaoImpl.class);

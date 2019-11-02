@@ -63,21 +63,24 @@ public class CategoryDaoImpl extends BaseDaoImpl<Category> implements CategoryDa
                 + " FROM category WHERE category_id = ?";
 
 
-        try (PreparedStatement statement = connection.prepareStatement(sql);
-             ResultSet resultSet = statement.executeQuery()) {
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
 
             statement.setInt(1, identity);
 
             Category category = null;
-            if (resultSet.next()) {
-                category = new Category();
-                category.setCategoryId(identity);
-                category.setCategoryName(resultSet.getString("category_name"));
-                category.setCategoryDescription(resultSet.getString("category_description"));
-                category.setPhotoPath(resultSet.getString("photo_path"));
-                category.setInStock(resultSet.getString("in_stock"));
-                category.setSeoAttributes(resultSet.getString("seo_attributes"));
+            try (ResultSet resultSet = statement.executeQuery()) {
 
+
+                if (resultSet.next()) {
+                    category = new Category();
+                    category.setCategoryId(identity);
+                    category.setCategoryName(resultSet.getString("category_name"));
+                    category.setCategoryDescription(resultSet.getString("category_description"));
+                    category.setPhotoPath(resultSet.getString("photo_path"));
+                    category.setInStock(resultSet.getString("in_stock"));
+                    category.setSeoAttributes(resultSet.getString("seo_attributes"));
+
+                }
             }
             return category;
         } catch (SQLException e) {

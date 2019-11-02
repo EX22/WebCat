@@ -28,13 +28,15 @@
       <li class="breadcrumb-item active">Catalog</li>
     </ul>
 
-    <div id="demo" class="carousel slide" data-ride="carousel">
-
-      <pre>
+    <ul class="nav">
         <c:forEach var="category" items="${categories}" varStatus="loop">
-            <c:out value="${category}"/>
+          <li class="nav-item">
+            <a class="nav-link" href="category.html?id=${category.categoryId}">"${category.categoryName}"</a>
+          </li>
         </c:forEach>
-      </pre>
+    </ul>
+
+    <div id="demo" class="carousel slide" data-ride="carousel">
 
       <!-- Indicators -->
       <ul class="carousel-indicators">
@@ -45,18 +47,25 @@
 
       <!-- The slideshow -->
       <div class="carousel-inner">
-        <div class="carousel-item active">
-          <img src="pictures/imgFour.jpg" alt="Bottles">
-        </div>
-        <div class="carousel-item">
-          <img src="pictures/imgFive.jpg" alt="Apple">
-        </div>
-        <div class="carousel-item">
-          <img src="pictures/imgSix.jpg" alt="Grocery">
-        </div>
+        <c:forEach var="category" items="${categories}" varStatus="loop">
+            <c:choose>
+                 <c:when test="${loop.index==0}">
+                    <c:set var = "isActive" value = "active"/>
+                 </c:when>
+                 <c:otherwise>
+                    <c:set var = "isActive" value = ""/>
+                 </c:otherwise>
+            </c:choose>
+            <div class="carousel-item ${isActive}">
+                <a href="category.html?id=${category.categoryId}">
+                    <img src="/images/${category.photoPath}" class="img-fluid" alt="Responsive image">
+                    <div>
+                        <c:out value = "${category.categoryName}"/>
+                    </div>
+                </a>
+            </div>
+        </c:forEach>
       </div>
-
-
 
       <!-- Left and right controls -->
       <a class="carousel-control-prev" href="#demo" data-slide="prev">

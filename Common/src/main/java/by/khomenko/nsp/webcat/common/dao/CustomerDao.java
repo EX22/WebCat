@@ -7,5 +7,6 @@ public interface CustomerDao extends Dao<Customer> {
 
     void updateCustomerName(Integer customerId, String name) throws PersistentException;
     void updateCustomerPass(Integer customerId, String password) throws PersistentException;
+    boolean isCustomerExist(String login) throws PersistentException;
 
 }

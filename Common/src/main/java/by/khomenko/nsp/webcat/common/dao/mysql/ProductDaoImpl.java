@@ -70,29 +70,32 @@ public class ProductDaoImpl extends BaseDaoImpl<Product> implements ProductDao {
     @Override
     public Product read(Integer identity) throws PersistentException {
         String sql = "SELECT category_id, product_name, short_description, full_description,"
-                + " product_price, product_discount, in_stock, photo_path, seo_attributes"
+                + " product_price, product_discount, in_stock, photo_path, seo_attributes, output_marker"
                 + " FROM products WHERE product_id = ?";
 
 
-        try (PreparedStatement statement = connection.prepareStatement(sql);
-             ResultSet resultSet = statement.executeQuery()) {
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
 
             statement.setInt(1, identity);
 
             Product product = null;
-            if (resultSet.next()) {
-                product = new Product();
-                product.setProductId(identity);
-                product.setCategoryId(resultSet.getInt("category_id"));
-                product.setProductName(resultSet.getString("product_name"));
-                product.setShortDescription(resultSet.getString("short_description"));
-                product.setFullDescription(resultSet.getString("full_description"));
-                product.setProductPrice(resultSet.getDouble("product_price"));
-                product.setProductDiscount(resultSet.getDouble("product_discount"));
-                product.setInStock(resultSet.getString("in_stock"));
-                product.setPhotoPath(resultSet.getString("photo_path"));
-                product.setSeoAttributes(resultSet.getString("seo_attributes"));
-                product.setOutputMarker(resultSet.getString("output_marker"));
+
+            try (ResultSet resultSet = statement.executeQuery()) {
+
+                if (resultSet.next()) {
+                    product = new Product();
+                    product.setProductId(identity);
+                    product.setCategoryId(resultSet.getInt("category_id"));
+                    product.setProductName(resultSet.getString("product_name"));
+                    product.setShortDescription(resultSet.getString("short_description"));
+                    product.setFullDescription(resultSet.getString("full_description"));
+                    product.setProductPrice(resultSet.getDouble("product_price"));
+                    product.setProductDiscount(resultSet.getDouble("product_discount"));
+                    product.setInStock(resultSet.getString("in_stock"));
+                    product.setPhotoPath(resultSet.getString("photo_path"));
+                    product.setSeoAttributes(resultSet.getString("seo_attributes"));
+                    product.setOutputMarker(resultSet.getString("output_marker"));
+                }
             }
             return product;
         } catch (SQLException e) {
@@ -137,12 +140,13 @@ public class ProductDaoImpl extends BaseDaoImpl<Product> implements ProductDao {
 
     @Override
     public List<Product> readProductsByCategoryId(Integer categoryId) throws PersistentException {
-        String sql = "SELECT product_name, short_description, full_description,"
-                + " product_price, product_discount, in_stock, photo_path, seo_attributes"
+        String sql = "SELECT product_id, product_name, short_description, full_description,"
+                + " product_price, product_discount, in_stock, photo_path, seo_attributes, output_marker"
                 + " FROM products WHERE category_id = ?";
 
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
 
+            statement.setInt(1, categoryId);
             List<Product> productsList = new ArrayList<>();
 
             try (ResultSet resultSet = statement.executeQuery()) {
@@ -150,7 +154,7 @@ public class ProductDaoImpl extends BaseDaoImpl<Product> implements ProductDao {
                 while (resultSet.next()) {
                     Product product
                             = new Product(resultSet.getInt("product_id"),
-                            resultSet.getInt("category_id"),
+                            categoryId,
                             resultSet.getString("product_name"),
                             resultSet.getString("short_description"),
                             resultSet.getString("full_description"),
