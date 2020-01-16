@@ -15,6 +15,23 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+  <script>
+      <!--move this script into external file-->
+      function cart(productId)
+                  {
+                  $.ajax({
+                      type:'get',
+                      url:'cart.html',
+                      data:{
+                        id:productId
+                      },
+                      success:function(response) {
+                        document.getElementById("total_items").textContent=response;
+                      }
+                    });
+                  }
+  </script>
+
 </head>
 <body>
 
@@ -40,8 +57,8 @@
         <ul class="list-unstyled mt-3 mb-4">
           <li><c:out value="${product.shortDescription}"/></li>
         </ul>
-        <button type="button" class="btn btn-lg btn-block btn-primary">Buy it now</button>
-        <button type="button" class="btn btn-lg btn-block btn-primary">Add to cart</button>
+        <a class="btn btn-primary" href="checkout.html?id=${product.productId}" role="button">Buy Now</a>
+        <button type="button" class="btn btn-lg btn-block btn-secondary" onclick="cart(${product.productId})">Add to cart</button>
       </div>
     </div>
 

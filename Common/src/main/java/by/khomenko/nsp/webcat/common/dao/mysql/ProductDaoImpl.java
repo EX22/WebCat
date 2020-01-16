@@ -10,6 +10,8 @@ import org.apache.logging.log4j.Logger;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 
 public class ProductDaoImpl extends BaseDaoImpl<Product> implements ProductDao {
@@ -174,6 +176,44 @@ public class ProductDaoImpl extends BaseDaoImpl<Product> implements ProductDao {
         }
     }
 
+    @Override
+    public List<Product> readProductsById(Set<Integer> keySet) throws PersistentException {
+
+        String sql = "SELECT * FROM products WHERE product_id in ";
+
+        String ids = String.join(",", keySet.stream().map(String::valueOf).collect(Collectors.toSet()));
+
+        sql = sql + "(" + ids + ")";
+
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            List<Product> productsList = new ArrayList<>();
+
+            try (ResultSet resultSet = statement.executeQuery()) {
+
+                while (resultSet.next()) {
+                    Product product
+                            = new Product(resultSet.getInt("product_id"),
+                            resultSet.getInt("category_id"),
+                            resultSet.getString("product_name"),
+                            resultSet.getString("short_description"),
+                            resultSet.getString("full_description"),
+                            resultSet.getDouble("product_price"),
+                            resultSet.getDouble("product_discount"),
+                            resultSet.getString("in_stock"),
+                            resultSet.getString("photo_path"),
+                            resultSet.getString("seo_attributes"),
+                            resultSet.getString("output_marker"));
+                    productsList.add(product);
+                }
+            }
+            return productsList;
+        } catch (SQLException e) {
+            LOGGER.error("Reading all products an exception occurred. ", e);
+            throw new PersistentException(e);
+        }
+
+    }
 
 
     @Override

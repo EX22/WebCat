@@ -15,24 +15,7 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-  <script type="text/javascript">
-      function cart(productId)
-          {
 
-          $.ajax({
-              type:'get',
-              url:'cart.html',
-              data:{
-                id:productId
-              },
-              success:function(response) {
-                document.getElementById("total_items").textContent=response;
-
-              }
-            });
-
-          }
-  </script>
 </head>
 <body>
 
@@ -63,13 +46,13 @@
                         <h4 class="my-0 font-weight-normal">"${product.productName}"</h4>
                       </div>
                       <div class="card-body">
-                        <img src="/images/${product.photoPath}" class="img-fluid"/>
+                        <a href="product.html?id=${product.productId}">
+                            <img src="/images/${product.photoPath}" class="img-fluid" alt="Responsive image">
+                        </a>
                         <h1 class="card-title pricing-card-title">"${product.productPrice}"<small class="text-muted">/ "${product.productDiscount}"</small></h1>
                         <ul class="list-unstyled mt-3 mb-4">
                           <li>"${product.shortDescription}"</li>
                         </ul>
-                        <a class="btn btn-primary" href="checkout.html?id=${product.productId}" role="button">Buy it now</a>
-                        <button type="button" class="btn btn-lg btn-block btn-secondary" onclick="cart(${product.productId})">Add to cart</button>
                       </div>
                     </div>
                 </li>

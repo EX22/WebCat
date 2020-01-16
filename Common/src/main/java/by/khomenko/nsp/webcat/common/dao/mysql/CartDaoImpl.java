@@ -34,7 +34,7 @@ public class CartDaoImpl extends BaseDaoImpl<Cart> implements CartDao {
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
 
             statement.setInt(1, cart.getCustomerId());
-            statement.setInt(2, cart.getProductId());
+            //statement.setInt(2, cart.getProductId());
             statement.executeUpdate();
 
         } catch (SQLException e) {
@@ -56,12 +56,13 @@ public class CartDaoImpl extends BaseDaoImpl<Cart> implements CartDao {
 
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
 
+            statement.setInt(1, customerId);
             Cart cart = null;
             try (ResultSet resultSet = statement.executeQuery()) {
 
                 while (resultSet.next()) {
 
-                    cart = new Cart(customerId, resultSet.getInt("product_id"));
+                    //cart = new Cart(customerId, resultSet.getInt("product_id"));
 
                 }
             }

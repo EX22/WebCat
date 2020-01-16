@@ -1,31 +1,29 @@
-package by.khomenko.nsp.webcat.common.servlet.command;
+package by.khomenko.nsp.webcat.client.servlet.command;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-public class BlogCommand implements BaseCommand {
+public class ShowRegistrationCommand implements BaseCommand {
 
     /**
      * Instance of logger that provides logging capability for this class'
      * performance.
      */
     private static final Logger LOGGER
-            = LogManager.getLogger(BlogCommand.class);
+            = LogManager.getLogger(StarterPageCommand.class);
 
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException {
-
         try {
-
-            request.getRequestDispatcher("WEB-INF/jsp/blog.jsp")
+            request.getRequestDispatcher("WEB-INF/jsp/registration.jsp")
                     .forward(request, response);
-
-        } catch (Exception e) {
-            LOGGER.error("An exception in execute method in BlogCommand class occurred.", e);
+        } catch (ServletException e) {
+            LOGGER.error("An exception in execute method in RegistrationCommand class occurred.", e);
             response.sendRedirect("error.html");
         }
     }

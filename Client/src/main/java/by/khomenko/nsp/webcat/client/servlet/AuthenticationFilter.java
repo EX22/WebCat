@@ -1,4 +1,4 @@
-package by.khomenko.nsp.webcat.common.servlet;
+package by.khomenko.nsp.webcat.client.servlet;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -9,7 +9,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @WebFilter(description = "Redirect to login if not authorised",
-        urlPatterns = {"/exampleOne.html"})
+        urlPatterns = {"/profile.html"})
+
+//TODO Move this filter to client module.
 
 public class AuthenticationFilter extends HttpFilter {
 
@@ -17,6 +19,14 @@ public class AuthenticationFilter extends HttpFilter {
     protected void doFilter(HttpServletRequest request,
                             HttpServletResponse response, FilterChain chain)
             throws IOException, ServletException {
+
+        if (request.getSession().getAttribute("customerId") == null) {
+            String s = request.getRequestURI() + request.getQueryString();
+            request.getSession().setAttribute("requestedURL", s);
+            response.sendRedirect("signin.html");
+        } else {
+            chain.doFilter(request, response);
+        }
 
     }
 

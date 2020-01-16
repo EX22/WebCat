@@ -74,8 +74,9 @@
         </div>
       </form>
     </div>
+
     <div class="col-md-8 order-md-1">
-      <h4 class="mb-3">Billing address</h4>
+      <h4 class="mb-3">Shipping address</h4>
       <form class="needs-validation" novalidate>
         <div class="row">
           <div class="col-md-6 mb-3">
@@ -161,10 +162,6 @@
           </div>
         </div>
         <hr class="mb-4">
-        <div class="custom-control custom-checkbox">
-          <input type="checkbox" class="custom-control-input" id="same-address">
-          <label class="custom-control-label" for="same-address">Shipping address is the same as my billing address</label>
-        </div>
         <div class="custom-control custom-checkbox">
           <input type="checkbox" class="custom-control-input" id="save-info">
           <label class="custom-control-label" for="save-info">Save this information for next time</label>

@@ -1,9 +1,9 @@
-package by.khomenko.nsp.webcat.common.servlet;
+package by.khomenko.nsp.webcat.client.servlet;
 
 import by.khomenko.nsp.webcat.common.dao.DaoFactory;
 import by.khomenko.nsp.webcat.common.dao.pool.ConnectionPool;
 import by.khomenko.nsp.webcat.common.exception.PersistentException;
-import by.khomenko.nsp.webcat.common.servlet.command.*;
+import by.khomenko.nsp.webcat.client.servlet.command.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -26,7 +26,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class DispatcherServlet extends HttpServlet {
 
-    //TODO Probable se Descriptor file instead of constants.
+    //TODO Probable to use Descriptor file instead of constants.
     private static final String DB_DRIVER_CLASS = "com.mysql.cj.jdbc.Driver";
     private static final String DB_URL = "jdbc:mysql://localhost:3306/web_cat?useUnicode=true&characterEncoding=UTF-8&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
     private static final String DB_USER = "web_cat_user";
@@ -42,27 +42,35 @@ public class DispatcherServlet extends HttpServlet {
     private static final Logger LOGGER
             = LogManager.getLogger(DispatcherServlet.class);
 
-    private static Map<String, Class<? extends BaseCommand>> command = new ConcurrentHashMap<>();
+    private static Map<String, Class<? extends BaseCommand>> commandGet = new ConcurrentHashMap<>();
 
     static {
 
-        command.put("/", StarterPageCommand.class);
-        command.put("/blog.html", BlogCommand.class);
-        command.put("/cart.html", CartCommand.class);
-        command.put("/catalog.html", CatalogCommand.class);
-        command.put("/category.html", CategoryCommand.class);
-        command.put("/checkout.html", CheckOutCommand.class);
+        commandGet.put("/", StarterPageCommand.class);
+        commandGet.put("/blog.html", BlogCommand.class);
+        commandGet.put("/cart.html", CartCommand.class);
+        commandGet.put("/catalog.html", CatalogCommand.class);
+        commandGet.put("/category.html", CategoryCommand.class);
+        commandGet.put("/checkout.html", CheckOutCommand.class);
 
-        command.put("/product.html", ProductCommand.class);
-        command.put("/profile.html", ProfileCommand.class);
-        command.put("/registration.html", RegistrationCommand.class);
-        command.put("/signin.html", SignInCommand.class);
-        command.put("/starterpage.html", StarterPageCommand.class);
+        commandGet.put("/product.html", ProductCommand.class);
+        commandGet.put("/profile.html", ProfileCommand.class);
+        commandGet.put("/registration.html", ShowRegistrationCommand.class);
+        commandGet.put("/signin.html", SignInCommand.class);
+        commandGet.put("/starterpage.html", StarterPageCommand.class);
+
+    }
+
+    private static Map<String, Class<? extends BaseCommand>> commandPost = new ConcurrentHashMap<>();
+
+    static {
+
+        commandPost.put("/registration.html", RegistrationCommand.class);
 
     }
 
     @SuppressWarnings("unchecked")
-    private <T extends BaseCommand> T getCommandByUrl(String s) {
+    private <T extends BaseCommand> T getCommandByUrl(String s, Map<String, Class<? extends BaseCommand>> command) {
 
         Class value = command.get(s);
         if (value != null){
@@ -86,7 +94,7 @@ public class DispatcherServlet extends HttpServlet {
         int length = request.getContextPath().length();
         String s = request.getRequestURI().substring(length);
 
-        BaseCommand baseCommand = getCommandByUrl(s);
+        BaseCommand baseCommand = getCommandByUrl(s, commandGet);
 
         if(baseCommand != null) {
             baseCommand.execute(request, response);
@@ -102,6 +110,11 @@ public class DispatcherServlet extends HttpServlet {
         int length = request.getContextPath().length();
         String s = request.getRequestURI().substring(length);
 
+        BaseCommand baseCommand = getCommandByUrl(s, commandPost);
+
+        if(baseCommand != null) {
+            baseCommand.execute(request, response);
+        }
 
 
     }

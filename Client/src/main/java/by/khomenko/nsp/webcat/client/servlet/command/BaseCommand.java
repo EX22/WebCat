@@ -1,4 +1,4 @@
-package by.khomenko.nsp.webcat.common.servlet.command;
+package by.khomenko.nsp.webcat.client.servlet.command;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

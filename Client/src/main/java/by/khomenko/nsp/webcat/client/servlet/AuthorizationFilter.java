@@ -1,4 +1,4 @@
-package by.khomenko.nsp.webcat.common.servlet;
+package by.khomenko.nsp.webcat.client.servlet;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -17,6 +17,8 @@ public class AuthorizationFilter extends HttpFilter {
     protected void doFilter(HttpServletRequest request,
                             HttpServletResponse response, FilterChain chain)
             throws IOException, ServletException {
+
+
 
 
     }

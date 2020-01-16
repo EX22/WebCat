@@ -3,7 +3,6 @@ package by.khomenko.nsp.webcat.common.dao.mysql;
 import by.khomenko.nsp.webcat.common.dao.OrderDao;
 import by.khomenko.nsp.webcat.common.entity.Order;
 import by.khomenko.nsp.webcat.common.exception.PersistentException;
-import com.sun.org.apache.xpath.internal.operations.Or;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -97,6 +96,7 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
 
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
 
+            statement.setInt(1, customerId);
             List<Order> ordersList = new ArrayList<>();
 
             try (ResultSet resultSet = statement.executeQuery()) {
@@ -104,7 +104,7 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
                 while (resultSet.next()) {
                     Order order
                             = new Order(resultSet.getInt("order_id"),
-                            resultSet.getInt("customer_id"),
+                            customerId,
                             resultSet.getDouble("order_price"),
                             resultSet.getString("order_status"),
                             resultSet.getString("date"),

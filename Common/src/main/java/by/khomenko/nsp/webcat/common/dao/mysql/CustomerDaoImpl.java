@@ -51,8 +51,8 @@ public class CustomerDaoImpl extends BaseDaoImpl<Customer> implements CustomerDa
 
     @Override
     public Customer read(Integer identity) throws PersistentException {
-        String sql = "SELECT customer_id, login, password, name, contacts phone_number, "
-                + "email, ip, location, customer_status, discount FROM customers WHERE id = ?";
+        String sql = "SELECT customer_id, login, password, name, contacts, phone_number, "
+                + "email, ip, location, customer_status, discount FROM customers WHERE customer_id = ?";
 
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
 
@@ -78,6 +78,40 @@ public class CustomerDaoImpl extends BaseDaoImpl<Customer> implements CustomerDa
             }
             return customer;
         } catch (SQLException e) {
+            LOGGER.error("Reading table `customers` by customer id an exception occurred. ", e);
+            throw new PersistentException(e);
+        }
+    }
+
+    @Override
+    public Customer read(String login, String password) throws PersistentException {
+        String sql = "SELECT customer_id, login, password, name, contacts, phone_number, "
+                + "email, ip, location, customer_status, discount "
+                + "FROM customers WHERE login = ? AND password = MD5(?)";
+
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            Customer customer = null;
+
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    customer = new Customer();
+                    customer.setId(resultSet.getInt("customer_id"));
+                    customer.setLogin(resultSet.getString("login"));
+                    customer.setPassword(resultSet.getString("password"));
+                    customer.setName(resultSet.getString("name"));
+                    customer.setContacts(resultSet.getString("contacts"));
+                    customer.setPhoneNumber(resultSet.getString("phone_number"));
+                    customer.setEmail(resultSet.getString("email"));
+                    customer.setIp(resultSet.getString("ip"));
+                    customer.setLocation(resultSet.getString("location"));
+                    customer.setStatus(resultSet.getString("customer_status"));
+                    customer.setDiscount(resultSet.getDouble("discount"));
+
+                }
+            }
+            return customer;
+        } catch (SQLException e) {
             LOGGER.error("Reading table `customers` an exception occurred. ", e);
             throw new PersistentException(e);
         }
@@ -86,7 +120,7 @@ public class CustomerDaoImpl extends BaseDaoImpl<Customer> implements CustomerDa
     @Override
     public void updateCustomerName(Integer customerId, String name) throws PersistentException {
 
-        String sql = "UPDATE customers SET name = ? WHERE id = ?";
+        String sql = "UPDATE customers SET name = ? WHERE customer_id = ?";
 
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
 
@@ -103,7 +137,7 @@ public class CustomerDaoImpl extends BaseDaoImpl<Customer> implements CustomerDa
     @Override
     public void updateCustomerPass(Integer customerId, String password) throws PersistentException {
 
-        String sql = "UPDATE customers SET password = ? WHERE id = ?";
+        String sql = "UPDATE customers SET password = ? WHERE customer_id = ?";
 
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
 
@@ -120,7 +154,7 @@ public class CustomerDaoImpl extends BaseDaoImpl<Customer> implements CustomerDa
     @Override
     public boolean isCustomerExist(String login) throws PersistentException {
 
-        String sql = "SELECT id FROM customers WHERE login = ?";
+        String sql = "SELECT customer_id FROM customers WHERE login = ?";
 
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
 

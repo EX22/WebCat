@@ -15,23 +15,27 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+  <script src="js/validation.js"></script>
 </head>
 
 <body class= "text-center">
 
     <div class="container-fluid">
-        <form class="form-signin">
+
+        <form method="post" class="form-signin" onsubmit="return validateRegistrationForm()" id="registrationForm">
           <img class="mb-4" src="{{ site.baseurl }}/docs/{{ site.docs_version }}/assets/brand/bootstrap-solid.svg" alt="" width="72" height="72">
           <h1 class="h3 mb-3 font-weight-normal">Please register</h1>
 
+          <jsp:include page="errormessage.jsp"/>
+
           <label for="inputEmail" class="sr-only">Email address</label>
-          <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
+          <input type="email" id="inputEmail" class="form-control" name="login" placeholder="Email address" required autofocus>
 
           <label for="inputPassword" class="sr-only">Password</label>
-          <input type="password" id="inputPassword" class="form-control" placeholder="Password" required>
+          <input type="password" id="inputPassword" class="form-control" name="password" placeholder="Password" required>
 
           <label for="inputPassword" class="sr-only">Confirm password</label>
-          <input type="password" id="confirmPassword" class="form-control" placeholder="Confirm password" required>
+          <input type="password" id="confirmPassword" class="form-control" name="confirmPassword" placeholder="Confirm password" required>
 
           <button class="btn btn-lg btn-primary btn-block" type="submit">Register</button>
           <p class="mt-5 mb-3 text-muted">&copy; 2017-{{ site.time | date: "%Y" }}</p>

@@ -1,8 +1,8 @@
-package by.khomenko.nsp.webcat.common.servlet.command;
+package by.khomenko.nsp.webcat.client.servlet.command;
 
-import by.khomenko.nsp.webcat.common.dao.CategoryDao;
 import by.khomenko.nsp.webcat.common.dao.DaoFactory;
-import by.khomenko.nsp.webcat.common.entity.Category;
+import by.khomenko.nsp.webcat.common.dao.ProductDao;
+import by.khomenko.nsp.webcat.common.entity.Product;
 import by.khomenko.nsp.webcat.common.exception.PersistentException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -14,27 +14,28 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class CatalogCommand implements BaseCommand {
+public class StarterPageCommand implements BaseCommand {
 
     /**
      * Instance of logger that provides logging capability for this class'
      * performance.
      */
     private static final Logger LOGGER
-            = LogManager.getLogger(CatalogCommand.class);
+            = LogManager.getLogger(StarterPageCommand.class);
+
 
     private Map<String, Object> load() throws PersistentException {
 
         Map<String, Object> map = new HashMap<>();
 
-        try (CategoryDao categoryDao = DaoFactory.getInstance().createDao(CategoryDao.class)) {
+        try (ProductDao productDao = DaoFactory.getInstance().createDao(ProductDao.class)) {
 
-            List<Category> categoryList = categoryDao.readAll();
+            List<Product> productsList = productDao.readAll();
 
-            map.put("categories", categoryList);
+            map.put("products", productsList);
 
         } catch (Exception e) {
-            LOGGER.error("Loading catalog page an exception occurred.", e);
+            LOGGER.error("Loading starter page an exception occurred.", e);
             throw new PersistentException(e);
         }
 
@@ -46,16 +47,16 @@ public class CatalogCommand implements BaseCommand {
 
         try {
 
-            Map<String, Object> catalogMap = load();
-            for (String key : catalogMap.keySet()) {
-                request.setAttribute(key, catalogMap.get(key));
+            Map<String, Object> homePageMap = load();
+            for (String key : homePageMap.keySet()) {
+                request.setAttribute(key, homePageMap.get(key));
             }
 
-            request.getRequestDispatcher("WEB-INF/jsp/catalog.jsp")
+            request.getRequestDispatcher("WEB-INF/jsp/starterpage.jsp")
                     .forward(request, response);
 
         } catch (Exception e) {
-            LOGGER.error("An exception in execute method in CatalogCommand class occurred.", e);
+            LOGGER.error("An exception in execute method in StarterPageCommand class occurred.", e);
             response.sendRedirect("error.html");
         }
     }

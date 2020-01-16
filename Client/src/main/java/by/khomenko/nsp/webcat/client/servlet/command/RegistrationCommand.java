@@ -1,4 +1,4 @@
-package by.khomenko.nsp.webcat.common.servlet.command;
+package by.khomenko.nsp.webcat.client.servlet.command;
 
 import by.khomenko.nsp.webcat.common.dao.CustomerDao;
 import by.khomenko.nsp.webcat.common.dao.DaoFactory;
@@ -11,9 +11,6 @@ import org.apache.logging.log4j.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class RegistrationCommand implements BaseCommand {
 
@@ -59,7 +56,6 @@ public class RegistrationCommand implements BaseCommand {
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-
         try {
 
             String login = request.getParameter("login");
@@ -67,8 +63,9 @@ public class RegistrationCommand implements BaseCommand {
             String confirmPassword = request.getParameter("confirmPassword");
 
             if (login == null && password == null && confirmPassword == null) {
-                request.getRequestDispatcher("WEB-INF/jsp/registration.jsp")
-                        .forward(request, response);
+                //TODO Verify how it works.
+                LOGGER.warn("One of the three registration parameters is null.");
+                response.sendRedirect("error.html");
                 return;
             }
 
@@ -81,13 +78,12 @@ public class RegistrationCommand implements BaseCommand {
 
             } catch (ValidationException e) {
 
+                //TODO Check error handling. Handle existing email input.
                 request.setAttribute("errorMessage", e.getMessage());
                 request.setAttribute("regLogin", login);
                 request.getRequestDispatcher("WEB-INF/jsp/registration.jsp")
                         .forward(request, response);
             }
-
-
 
         } catch (Exception e) {
             LOGGER.error("An exception in execute method in RegistrationCommand class occurred.", e);

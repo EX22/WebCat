@@ -1,4 +1,4 @@
-package by.khomenko.nsp.webcat.common.servlet.command;
+package by.khomenko.nsp.webcat.client.servlet.command;
 
 import by.khomenko.nsp.webcat.common.dao.CartDao;
 import by.khomenko.nsp.webcat.common.dao.CustomerDao;
@@ -57,7 +57,7 @@ public class ProfileCommand implements BaseCommand {
 
         try {
 
-            Map<String, Object> profileMap = load(Integer.parseInt(request.getParameter("customerId")));
+            Map<String, Object> profileMap = load((Integer)request.getSession().getAttribute("customerId"));
             for (String key : profileMap.keySet()) {
                 request.setAttribute(key, profileMap.get(key));
             }

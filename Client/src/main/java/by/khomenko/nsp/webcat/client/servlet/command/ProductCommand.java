@@ -1,4 +1,4 @@
-package by.khomenko.nsp.webcat.common.servlet.command;
+package by.khomenko.nsp.webcat.client.servlet.command;
 
 import by.khomenko.nsp.webcat.common.dao.DaoFactory;
 import by.khomenko.nsp.webcat.common.dao.ProductDao;
