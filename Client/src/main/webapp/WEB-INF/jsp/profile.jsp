@@ -19,44 +19,17 @@
 
     <body>
 
-        <div class="card" style="width: 18rem;">
-          <img src="..." class="card-img-top" alt="...">
-          <div class="card-body">
-            <p class="card-text">"${customer.name}"</p>
-          </div>
-        </div>
+        <jsp:include page="headmenu.jsp"/>
 
-        <div class="card text-center">
-          <div class="card-header">
-            <ul class="nav nav-tabs card-header-tabs">
-              <li class="nav-item">
-                <a class="nav-link" href="#">Personal data</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">Order status</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">Settings</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">Cart</a>
-              </li>
-            </ul>
+        <jsp:include page="profileheader.jsp"/>
 
-                <script type="text/javascript">
-                     context = "${context}"
-                     active_id = window.location.pathname.substring(context.length + 1)
-                     document.getElementById(active_id).className = "active"
-                </script>
-
-          </div>
           <div class="card-body">
             <h5 class="card-title">Special title treatment</h5>
             <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
             <a href="#" class="btn btn-primary">Go somewhere</a>
           </div>
-        </div>
 
+        <jsp:include page="footer.jsp"/>
 
     </body>
 </html>

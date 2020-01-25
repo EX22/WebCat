@@ -26,7 +26,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class DispatcherServlet extends HttpServlet {
 
-    //TODO Probable to use Descriptor file instead of constants.
+    //TODO Possible to use Descriptor file instead of constants.
     private static final String DB_DRIVER_CLASS = "com.mysql.cj.jdbc.Driver";
     private static final String DB_URL = "jdbc:mysql://localhost:3306/web_cat?useUnicode=true&characterEncoding=UTF-8&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
     private static final String DB_USER = "web_cat_user";
@@ -66,7 +66,7 @@ public class DispatcherServlet extends HttpServlet {
     static {
 
         commandPost.put("/registration.html", RegistrationCommand.class);
-
+        commandPost.put("/signin.html", SignInCommand.class);
     }
 
     @SuppressWarnings("unchecked")

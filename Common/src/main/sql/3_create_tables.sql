@@ -69,6 +69,7 @@ CREATE TABLE IF NOT EXISTS `customers` (
 	`location` VARCHAR(250) NULL DEFAULT NULL,
 	`customer_status` VARCHAR(150) NULL DEFAULT NULL,
 	`discount` DOUBLE NULL DEFAULT NULL,
+	`role` INT(11) NOT NULL DEFAULT '0',
 	PRIMARY KEY (`customer_id`)
 )
 COLLATE='utf8_general_ci'

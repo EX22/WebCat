@@ -57,7 +57,7 @@
         <ul class="list-unstyled mt-3 mb-4">
           <li><c:out value="${product.shortDescription}"/></li>
         </ul>
-        <a class="btn btn-primary" href="checkout.html?id=${product.productId}" role="button">Buy Now</a>
+        <a class="btn btn-primary btn-lg btn-block" href="checkout.html?id=${product.productId}" role="button">Buy Now</a>
         <button type="button" class="btn btn-lg btn-block btn-secondary" onclick="cart(${product.productId})">Add to cart</button>
       </div>
     </div>

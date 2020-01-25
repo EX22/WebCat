@@ -21,6 +21,7 @@ public class Customer extends Entity {
     private String location;
     private String status;
     private double discount;
+    private Role role;
 
 
 }

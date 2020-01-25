@@ -16,7 +16,7 @@ public class BlackListDaoImpl extends BaseDaoImpl<BlackList> implements BlackLis
     private static final Logger LOGGER
             = LogManager.getLogger(AdministrationDaoImpl.class);
 
-    BlackListDaoImpl() throws PersistentException {
+    public BlackListDaoImpl() throws PersistentException {
     }
 
     @Override
@@ -74,7 +74,7 @@ public class BlackListDaoImpl extends BaseDaoImpl<BlackList> implements BlackLis
 
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
 
-            statement.setInt(1, customer.getId());
+            statement.setInt(1, customer.getCustomerId());
 
             try (ResultSet resultSet = statement.executeQuery()) {
 

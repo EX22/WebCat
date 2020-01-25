@@ -77,7 +77,7 @@
           </div>
         </div>
         <hr class="mb-4">
-        <button class="btn btn-primary btn-lg btn-block" type="submit">Continue to checkout</button>
+        <a class="btn btn-primary btn-lg btn-block" href="checkout.html?id=${product.productId}" role="button">Continue to checkout</a>
       </form>
     </div>
   </div>

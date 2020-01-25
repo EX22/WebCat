@@ -64,6 +64,7 @@ public class SignInCommand implements BaseCommand {
 
             if (loggedInCustomer != null) {
                 request.getSession().setAttribute("customerId", loggedInCustomer.getCustomerId());
+                //request.getSession().setAttribute("customerRole", loggedInCustomer.getRole());
                 response.sendRedirect("profile.html");
             }
 

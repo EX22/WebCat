@@ -22,9 +22,9 @@
                 Language
               </a>
               <div class="dropdown-menu">
-                <a class="dropdown-item" href="#">Belarusian</a>
-                <a class="dropdown-item" href="#">English</a>
-                <a class="dropdown-item" href="#">Russian</a>
+                <a class="dropdown-item" href="?locale=be_BY">Belarusian</a>
+                <a class="dropdown-item" href="?locale=en_US">English</a>
+                <a class="dropdown-item" href="?locale=ru_RU">Russian</a>
               </div>
 
       </div>

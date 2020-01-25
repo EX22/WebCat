@@ -24,7 +24,7 @@ public class CustomerDaoImpl extends BaseDaoImpl<Customer> implements CustomerDa
     @Override
     public Integer create(Customer customer) throws PersistentException {
         String sql = "INSERT INTO customers (login, password)"
-                + " VALUES (?, ?)";
+                + " VALUES (?, MD5(?))";
 
         try (PreparedStatement statement = connection.prepareStatement(sql,
                 Statement.RETURN_GENERATED_KEYS)) {
@@ -62,7 +62,7 @@ public class CustomerDaoImpl extends BaseDaoImpl<Customer> implements CustomerDa
             try (ResultSet resultSet = statement.executeQuery()) {
                 if (resultSet.next()) {
                     customer = new Customer();
-                    customer.setId(identity);
+                    customer.setCustomerId(identity);
                     customer.setLogin(resultSet.getString("login"));
                     customer.setPassword(resultSet.getString("password"));
                     customer.setName(resultSet.getString("name"));
@@ -91,12 +91,15 @@ public class CustomerDaoImpl extends BaseDaoImpl<Customer> implements CustomerDa
 
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
 
+            statement.setString(1, login);
+            statement.setString(2, password);
+
             Customer customer = null;
 
             try (ResultSet resultSet = statement.executeQuery()) {
                 if (resultSet.next()) {
                     customer = new Customer();
-                    customer.setId(resultSet.getInt("customer_id"));
+                    customer.setCustomerId(resultSet.getInt("customer_id"));
                     customer.setLogin(resultSet.getString("login"));
                     customer.setPassword(resultSet.getString("password"));
                     customer.setName(resultSet.getString("name"));
@@ -127,6 +130,7 @@ public class CustomerDaoImpl extends BaseDaoImpl<Customer> implements CustomerDa
             statement.setString(1, name);
             statement.setInt(2, customerId);
             statement.executeUpdate();
+
         } catch (SQLException e) {
             LOGGER.error("Updating customer's name an exception occurred. ", e);
             throw new PersistentException(e);
@@ -144,6 +148,7 @@ public class CustomerDaoImpl extends BaseDaoImpl<Customer> implements CustomerDa
             statement.setString(1, password);
             statement.setInt(2, customerId);
             statement.executeUpdate();
+
         } catch (SQLException e) {
             LOGGER.error("Updating customer's password an exception occurred. ", e);
             throw new PersistentException(e);
