@@ -1,6 +1,5 @@
 package by.khomenko.nsp.webcat.client.servlet.command;
 
-import by.khomenko.nsp.webcat.common.dao.CartDao;
 import by.khomenko.nsp.webcat.common.dao.DaoFactory;
 import by.khomenko.nsp.webcat.common.dao.ProductDao;
 import by.khomenko.nsp.webcat.common.entity.Cart;
@@ -41,17 +40,7 @@ public class CartCommand implements BaseCommand {
             LOGGER.error("Loading cart page an exception occurred.", e);
             throw new PersistentException(e);
         }
-        /*try (CartDao cartDao = DaoFactory.getInstance().createDao(CartDao.class)) {
 
-            Cart customerCart = cartDao.readCartByCustomerId(customerId);
-
-            map.put("customerCart", customerCart);
-
-        } catch (Exception e) {
-            LOGGER.error("Loading cart page an exception occurred.", e);
-            throw new PersistentException(e);
-        }
-*/
         return map;
     }
 

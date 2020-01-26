@@ -82,9 +82,9 @@ CREATE TABLE IF NOT EXISTS `orders` (
 	`order_id` INT(11) NOT NULL,
 	`customer_id` INT(11) NOT NULL,
 	`order_price` DOUBLE NOT NULL,
-	`order_status` VARCHAR(64) NOT NULL,
-	`date` DATE NOT NULL,
-	`shipping_address` VARCHAR(255) NOT NULL,
+	`order_status` VARCHAR(50) NOT NULL,
+	`order_date` VARCHAR(50) NOT NULL,
+	`shipping_address` VARCHAR(250) NOT NULL,
 	PRIMARY KEY (`order_id`),
 	INDEX `FK_orders_customers` (`customer_id`),
 	CONSTRAINT `FK_orders_customers` FOREIGN KEY (`customer_id`) REFERENCES `customers` (`customer_id`)
@@ -92,6 +92,7 @@ CREATE TABLE IF NOT EXISTS `orders` (
 COLLATE='utf8_general_ci'
 ENGINE=InnoDB
 ;
+
 
 CREATE TABLE IF NOT EXISTS `order_details` (
 	`order_id` INT(11) NOT NULL,

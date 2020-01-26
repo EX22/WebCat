@@ -21,8 +21,8 @@ import java.util.concurrent.ConcurrentHashMap;
 @WebServlet(
         name = "DispatcherServlet",
         urlPatterns = {"/", "/starterpage.html", "/catalog.html", "/blog.html", "/category.html",
-                "/product.html", "/profile.html", "/registration.html",
-                "/signin.html", "/cart.html", "/checkout.html"})
+                "/orderstatus.html", "/personaldata.html", "/product.html", "/profile.html",
+                "/registration.html", "/settings.html", "/signin.html", "/cart.html", "/checkout.html"})
 
 public class DispatcherServlet extends HttpServlet {
 
@@ -58,6 +58,9 @@ public class DispatcherServlet extends HttpServlet {
         commandGet.put("/registration.html", ShowRegistrationCommand.class);
         commandGet.put("/signin.html", SignInCommand.class);
         commandGet.put("/starterpage.html", StarterPageCommand.class);
+        commandGet.put("/orderstatus.html", OrderStatusCommand.class);
+        commandGet.put("/personaldata.html", PersonalDataCommand.class);
+        commandGet.put("/settings.html", SettingsCommand.class);
 
     }
 

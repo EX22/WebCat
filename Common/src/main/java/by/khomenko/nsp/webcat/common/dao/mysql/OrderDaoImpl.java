@@ -29,7 +29,7 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
     @Override
     public Integer create(Order order) throws PersistentException {
         String sql = "INSERT INTO orders (customer_id, order_price,"
-                + " order_status, date, shipping_address) VALUES (?, ?, ?, ?, ?)";
+                + " order_status, order_date, shipping_address) VALUES (?, ?, ?, ?, ?)";
 
         try (PreparedStatement statement = connection.prepareStatement(sql,
                 Statement.RETURN_GENERATED_KEYS)) {
@@ -60,7 +60,7 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
     @Override
     public Order read(Integer identity) throws PersistentException {
         String sql = "SELECT customer_id, order_price, order_status,"
-                + " date, shipping_address"
+                + " order_date, shipping_address"
                 + " FROM orders WHERE order_id = ?";
 
 
@@ -76,7 +76,7 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
                 order.setCustomerId(resultSet.getInt("customer_id"));
                 order.setOrderPrice(resultSet.getDouble("order_price"));
                 order.setOrderStatus(resultSet.getString("order_status"));
-                order.setOrderDate(resultSet.getString("date"));
+                order.setOrderDate(resultSet.getString("order_date"));
                 order.setShippingAddress(resultSet.getString("shipping_address"));
 
             }
@@ -91,7 +91,7 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
     @Override
     public List<Order> readOrdersByCustomerId(Integer customerId) throws PersistentException {
         String sql = "SELECT order_id, order_price, order_status,"
-                + " date, shipping_address"
+                + " order_date, shipping_address"
                 + " FROM orders WHERE customer_id = ?";
 
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -107,7 +107,7 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
                             customerId,
                             resultSet.getDouble("order_price"),
                             resultSet.getString("order_status"),
-                            resultSet.getString("date"),
+                            resultSet.getString("order_date"),
                             resultSet.getString("shipping_address"));
                     ordersList.add(order);
                 }

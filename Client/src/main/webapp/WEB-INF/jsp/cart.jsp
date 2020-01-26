@@ -32,13 +32,6 @@
       </h4>
       <ul class="list-group mb-3">
           <c:forEach var="product" items="${products}" varStatus="loop">
-              <!--<li class="list-group-item d-flex justify-content-between lh-condensed">
-                    <div>
-                      <h6 class="my-0"><c:out value="${cart.products}"/></h6>
-                      <small class="text-muted"><c:out value="${product.productName}"/></small>
-                    </div>
-                    <span class="text-muted"><c:out value="${product.productPrice}"/>$</span>
-              </li>-->
               <div class="card mb-3" style="max-width: 540px;">
                 <div class="row no-gutters">
                   <div class="col-md-4">
