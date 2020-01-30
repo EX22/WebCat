@@ -1,5 +1,6 @@
 package by.khomenko.nsp.webcat.client.servlet.command;
 
+import by.khomenko.nsp.webcat.common.dao.CartDao;
 import by.khomenko.nsp.webcat.common.dao.DaoFactory;
 import by.khomenko.nsp.webcat.common.dao.ProductDao;
 import by.khomenko.nsp.webcat.common.entity.Cart;
@@ -18,9 +19,9 @@ import java.util.Map;
 public class CartCommand implements BaseCommand {
 
     /**
-     * Instance of logger that provides logging capability for this class'
-     * performance.
+     * Instance of logger that provides logging capability for this class
      */
+
     private static final Logger LOGGER
             = LogManager.getLogger(CartCommand.class);
 
@@ -28,13 +29,15 @@ public class CartCommand implements BaseCommand {
 
         Map<String, Object> map = new HashMap<>();
 
-            map.put("cart", cart);
-
-        try (ProductDao productDao = DaoFactory.getInstance().createDao(ProductDao.class)) {
+        try (ProductDao productDao = DaoFactory.getInstance().createDao(ProductDao.class);
+             CartDao cartDao = DaoFactory.getInstance().createDao(CartDao.class)) {
 
             List<Product> products = productDao.readProductsById(cart.getProducts().keySet());
 
+            cartDao.create(cart);
+
             map.put("products", products);
+            map.put("cart", cart);
 
         } catch (Exception e) {
             LOGGER.error("Loading cart page an exception occurred.", e);

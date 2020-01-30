@@ -45,6 +45,11 @@ public class CheckOutCommand implements BaseCommand {
 
         try {
 
+            Map<String, Object> checkOutMap = load((Integer)request.getSession().getAttribute("customerId"));
+            for (String key : checkOutMap.keySet()) {
+                request.setAttribute(key, checkOutMap.get(key));
+            }
+
             request.getRequestDispatcher("WEB-INF/jsp/checkout.jsp")
                     .forward(request, response);
 

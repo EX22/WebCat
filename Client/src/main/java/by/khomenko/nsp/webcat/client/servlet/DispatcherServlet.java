@@ -70,6 +70,7 @@ public class DispatcherServlet extends HttpServlet {
 
         commandPost.put("/registration.html", RegistrationCommand.class);
         commandPost.put("/signin.html", SignInCommand.class);
+        commandPost.put("/settings.html", SettingsCommand.class);
     }
 
     @SuppressWarnings("unchecked")

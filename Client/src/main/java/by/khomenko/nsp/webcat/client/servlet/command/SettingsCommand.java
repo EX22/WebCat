@@ -4,6 +4,7 @@ import by.khomenko.nsp.webcat.common.dao.CustomerDao;
 import by.khomenko.nsp.webcat.common.dao.DaoFactory;
 import by.khomenko.nsp.webcat.common.entity.Customer;
 import by.khomenko.nsp.webcat.common.exception.PersistentException;
+import by.khomenko.nsp.webcat.common.exception.ValidationException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -36,8 +37,48 @@ public class SettingsCommand implements BaseCommand {
         return map;
     }
 
+    public void updateProfileSettings(Integer currentCustomerId,
+                                      String customerName, String currentPass,
+                                      String newPass, String confirmPass)
+            throws PersistentException, ValidationException {
 
-    public void updateProfileSettings(){
+        Customer loggedCustomer;
+
+        try (CustomerDao customerDao = DaoFactory.getInstance().createDao(CustomerDao.class)) {
+
+            if ((customerName != null) && (!"".equals(customerName))) {
+
+                customerDao.updateCustomerName(currentCustomerId, customerName);
+            }
+
+            if ((newPass != null) && (!"".equals(newPass))) {
+                if (newPass.equals(confirmPass)) {
+
+                    loggedCustomer = customerDao.read(customerDao.read(currentCustomerId)
+                            .getLogin(), currentPass);
+
+                    if (loggedCustomer != null) {
+                        customerDao.updateCustomerPass(currentCustomerId, newPass);
+                    } else {
+                        throw new ValidationException("Current password is"
+                                + " false.");
+                    }
+
+                } else {
+                    throw new ValidationException("Password not equals to"
+                            + " confirm password.");
+                }
+            }
+
+        } catch (ValidationException e) {
+            LOGGER.error("Updating customer's profile settings an "
+                    + "exception occurred.", e);
+            throw new ValidationException(e);
+        } catch (Exception e) {
+            LOGGER.error("Updating customer's profile settings an "
+                    + "exception occurred.", e);
+            throw new PersistentException(e);
+        }
 
     }
 

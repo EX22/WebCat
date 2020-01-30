@@ -23,11 +23,92 @@
 
         <jsp:include page="profileheader.jsp"/>
 
-          <div class="card-body">
-            <h5 class="card-title">Profile settings</h5>
-            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-            <a href="#" class="btn btn-primary">Change settings</a>
-          </div>
+        <div class="container">
+            <div class="row">
+              <div class="col-md-8 order-md-1">
+                <h4 class="mb-3">Settings</h4>
+                <hr class="mb-4">
+                <form class="needs-validation" novalidate>
+                  <div class="row">
+                    <div class="col-md-6 mb-3">
+                      <label for="firstName">First name</label>
+                      <input type="text" class="form-control" id="firstName" placeholder="${customer.name}" value="" required>
+                      <div class="invalid-feedback">
+                        Valid first name is required.
+                      </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                      <label for="lastName">Last name</label>
+                      <input type="text" class="form-control" id="lastName" placeholder="" value="" required>
+                      <div class="invalid-feedback">
+                        Valid last name is required.
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="email">Email/Login</label>
+                    <input type="email" class="form-control" id="email" placeholder="${customer.login}">
+                    <div class="invalid-feedback">
+                      Please enter a valid email address for shipping updates.
+                    </div>
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="phone">Phone number</label>
+                    <input type="text" class="form-control" id="phone" placeholder="+${customer.phoneNumber}" required>
+                    <div class="invalid-feedback">
+                      Please enter your phone number.
+                    </div>
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="address">Shipping address</label>
+                    <input type="text" class="form-control" id="address" placeholder="Lahojski trakt 28/1" required>
+                    <div class="invalid-feedback">
+                      Please enter your shipping address.
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-md-5 mb-3">
+                      <label for="country">Country</label>
+                      <select class="custom-select d-block w-100" id="country" required>
+                        <option value="">Choose...</option>
+                        <option>Belarus</option>
+                        <option>Russia</option>
+                        <option>Ukraine</option>
+                      </select>
+                      <div class="invalid-feedback">
+                        Please select a valid country.
+                      </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                      <label for="state">State</label>
+                      <select class="custom-select d-block w-100" id="state" required>
+                        <option value="">Choose...</option>
+                        <option>Minsk</option>
+                        <option>Moscow</option>
+                        <option>Kiev</option>
+                      </select>
+                      <div class="invalid-feedback">
+                        Please provide a valid state.
+                      </div>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                      <label for="zip">Zip</label>
+                      <input type="text" class="form-control" id="zip" placeholder="" required>
+                      <div class="invalid-feedback">
+                        Zip code required.
+                      </div>
+                    </div>
+                  </div>
+                  <hr class="mb-4">
+                  <button class="btn btn-primary btn-lg btn-block" type="submit">Confirm changes</button>
+                </form>
+              </div>
+            </div>
+        </div>
 
         <jsp:include page="footer.jsp"/>
 
