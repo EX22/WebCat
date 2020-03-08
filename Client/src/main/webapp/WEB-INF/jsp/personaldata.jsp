@@ -37,7 +37,7 @@
                   </div>
               <div class="col-md-6 mb-3">
                 <h5><label for="lastName">Last name</label></h5>
-                <input type="text" readonly class="form-control-plaintext" id="lastName" value="Lastnameexamle">
+                <input type="text" readonly class="form-control-plaintext" id="lastName" value="LastnameExample">
               </div>
             </div>
           <hr class="mb-4">

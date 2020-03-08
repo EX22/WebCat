@@ -65,18 +65,19 @@
 
         <div class="col-md-8 order-md-1">
           <h4 class="mb-3">Shipping address</h4>
-          <form class="needs-validation" novalidate>
+          <form method="post" class="needs-validation" novalidate
+            onsubmit="return validateCheckOutForm()" id="checkOutForm">
             <div class="row">
               <div class="col-md-6 mb-3">
                 <label for="firstName">First name</label>
-                <input type="text" class="form-control" id="firstName" placeholder="" value="" required>
+                <input type="text" class="form-control" id="firstName" name="customerFirstName" placeholder="" value="" required>
                 <div class="invalid-feedback">
                   Valid first name is required.
                 </div>
               </div>
               <div class="col-md-6 mb-3">
                 <label for="lastName">Last name</label>
-                <input type="text" class="form-control" id="lastName" placeholder="" value="" required>
+                <input type="text" class="form-control" id="lastName" name="customerLastName" placeholder="" value="" required>
                 <div class="invalid-feedback">
                   Valid last name is required.
                 </div>
@@ -85,7 +86,7 @@
 
             <div class="mb-3">
               <label for="email">Email/Login</label>
-              <input type="email" class="form-control" id="email" placeholder="you@example.com">
+              <input type="email" class="form-control" id="email" name="customerEmail" placeholder="you@example.com">
               <div class="invalid-feedback">
                 Please enter a valid email address for shipping updates.
               </div>
@@ -93,15 +94,15 @@
 
             <div class="mb-3">
               <label for="phone">Phone number</label>
-              <input type="text" class="form-control" id="phone" placeholder="+375" required>
+              <input type="text" class="form-control" id="phone" name="customerPhone" placeholder="+375" required>
               <div class="invalid-feedback">
                 Please enter your phone number.
               </div>
             </div>
 
             <div class="mb-3">
-              <label for="address">Address</label>
-              <input type="text" class="form-control" id="address" placeholder="1234 Main St" required>
+              <label for="address">Shipping address</label>
+              <input type="text" class="form-control" id="address" name="customerShippingAddress" placeholder="" required>
               <div class="invalid-feedback">
                 Please enter your shipping address.
               </div>
@@ -110,9 +111,11 @@
             <div class="row">
               <div class="col-md-5 mb-3">
                 <label for="country">Country</label>
-                <select class="custom-select d-block w-100" id="country" required>
+                <select class="custom-select d-block w-100" id="country" name="customerCountry" required>
                   <option value="">Choose...</option>
-                  <option>United States</option>
+                  <option>Belarus</option>
+                  <option>Russia</option>
+                  <option>Ukraine</option>
                 </select>
                 <div class="invalid-feedback">
                   Please select a valid country.
@@ -120,9 +123,11 @@
               </div>
               <div class="col-md-4 mb-3">
                 <label for="state">State</label>
-                <select class="custom-select d-block w-100" id="state" required>
+                <select class="custom-select d-block w-100" id="state" name="customerState" required>
                   <option value="">Choose...</option>
-                  <option>California</option>
+                  <option>Minsk</option>
+                  <option>Moscow</option>
+                  <option>Kiev</option>
                 </select>
                 <div class="invalid-feedback">
                   Please provide a valid state.
@@ -130,7 +135,7 @@
               </div>
               <div class="col-md-3 mb-3">
                 <label for="zip">Zip</label>
-                <input type="text" class="form-control" id="zip" placeholder="" required>
+                <input type="text" class="form-control" id="zip" name="customerZipCode" placeholder="" required>
                 <div class="invalid-feedback">
                   Zip code required.
                 </div>

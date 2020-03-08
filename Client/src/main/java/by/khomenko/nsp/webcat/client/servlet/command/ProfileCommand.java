@@ -57,7 +57,13 @@ public class ProfileCommand implements BaseCommand {
 
         try {
 
-            Map<String, Object> profileMap = load((Integer)request.getSession().getAttribute("customerId"));
+            Object customerIdObj = request.getSession().getAttribute("customerId");
+            Map<String, Object> profileMap = new HashMap<>();
+
+            if (customerIdObj != null) {
+                profileMap = load((Integer)customerIdObj);
+            }
+
             for (String key : profileMap.keySet()) {
                 request.setAttribute(key, profileMap.get(key));
             }

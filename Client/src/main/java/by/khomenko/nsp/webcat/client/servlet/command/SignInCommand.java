@@ -15,8 +15,7 @@ import java.io.IOException;
 public class SignInCommand implements BaseCommand {
 
     /**
-     * Instance of logger that provides logging capability for this class'
-     * performance.
+     * Instance of logger that provides logging capability for this class.
      */
     private static final Logger LOGGER
             = LogManager.getLogger(SignInCommand.class);
@@ -30,6 +29,7 @@ public class SignInCommand implements BaseCommand {
              BlackListDao blackListDao = DaoFactory.getInstance().createDao(BlackListDao.class)) {
 
             loggedCustomer = customerDao.read(login, password);
+
             if (blackListDao.isCustomerInBlacklist(loggedCustomer)){
                 return null;
             }

@@ -52,6 +52,8 @@ public class CartCommand implements BaseCommand {
 
         try {
 
+            //request.getSession().removeAttribute("cart");
+
             Object cartObj = request.getSession().getAttribute("cart");
             Cart cart = null;
 
@@ -77,7 +79,7 @@ public class CartCommand implements BaseCommand {
                 return;
             }
 
-            Map<String, Object> cartMap = null;
+            Map<String, Object> cartMap = new HashMap<>();
 
             if (cart == null){
 
@@ -98,7 +100,9 @@ public class CartCommand implements BaseCommand {
 
             }
 
-            cartMap = load(cart);
+            if(!cart.getProducts().keySet().isEmpty()) {
+                cartMap = load(cart);
+            }
 
             for (String key : cartMap.keySet()) {
                 request.setAttribute(key, cartMap.get(key));

@@ -15,14 +15,13 @@ import java.io.IOException;
 public class RegistrationCommand implements BaseCommand {
 
     /**
-     * Instance of logger that provides logging capability for this class'
-     * performance.
+     * Instance of logger that provides logging capability for this class
      */
     private static final Logger LOGGER
             = LogManager.getLogger(RegistrationCommand.class);
 
 
-    private Integer createCustomer(String login, String pass, String confirmPass)
+    protected Integer createCustomer(String login, String pass, String confirmPass)
             throws PersistentException, ValidationException {
 
         Integer customerId;

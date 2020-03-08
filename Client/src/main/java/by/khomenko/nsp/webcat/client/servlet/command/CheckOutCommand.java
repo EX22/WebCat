@@ -4,6 +4,8 @@ import by.khomenko.nsp.webcat.common.dao.CartDao;
 import by.khomenko.nsp.webcat.common.dao.DaoFactory;
 import by.khomenko.nsp.webcat.common.entity.Cart;
 import by.khomenko.nsp.webcat.common.exception.PersistentException;
+import by.khomenko.nsp.webcat.common.exception.ValidationException;
+import by.khomenko.nsp.webcat.common.service.PasswordGenerator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -16,8 +18,7 @@ import java.util.Map;
 public class CheckOutCommand implements BaseCommand {
 
     /**
-     * Instance of logger that provides logging capability for this class'
-     * performance.
+     * Instance of logger that provides logging capability for this class
      */
     private static final Logger LOGGER
             = LogManager.getLogger(CheckOutCommand.class);
@@ -40,12 +41,43 @@ public class CheckOutCommand implements BaseCommand {
         return map;
     }
 
+    public void createNewCustomerAccount(String customerLogin)
+            throws ValidationException, PersistentException {
+
+        RegistrationCommand registrationCommand = new RegistrationCommand();
+        PasswordGenerator passwordGenerator = new PasswordGenerator();
+
+        String randomlyGeneratedNewCustomerPassword = passwordGenerator.generateRandomPassword(15);
+
+        registrationCommand.createCustomer(customerLogin, randomlyGeneratedNewCustomerPassword,
+                randomlyGeneratedNewCustomerPassword);
+
+    }
+
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         try {
 
-            Map<String, Object> checkOutMap = load((Integer)request.getSession().getAttribute("customerId"));
+            String newCustomerFirstName = request.getParameter("customerFirstName");
+            String newCustomerLastName = request.getParameter("customerLastName");
+            String newCustomerEmail = request.getParameter("customerEmail");
+            String newCustomerPhone = request.getParameter("customerPhone");
+            String newCustomerAddress = request.getParameter("customerAddress");
+            String newCustomerCountry = request.getParameter("customerCountry");
+            String newCustomerState = request.getParameter("customerState");
+            String newCustomerZipCode = request.getParameter("customerZipCode");
+
+            //TODO Send login and password by email to customer.
+            createNewCustomerAccount(newCustomerEmail);
+
+            Object customerIdObj = request.getSession().getAttribute("customerId");
+            Map<String, Object> checkOutMap = new HashMap<>();
+
+            if (customerIdObj != null) {
+                checkOutMap = load((Integer)customerIdObj);
+            }
+
             for (String key : checkOutMap.keySet()) {
                 request.setAttribute(key, checkOutMap.get(key));
             }

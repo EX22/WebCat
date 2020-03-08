@@ -34,20 +34,29 @@ public class CartDaoImpl extends BaseDaoImpl<Cart> implements CartDao {
 
     @Override
     public Integer create(Cart cart) throws PersistentException {
-        String sql = "INSERT INTO cart (customer_id, product_Id) VALUES (?, ?)";
+        String sql = "INSERT INTO cart (customer_id) VALUES (?)";
 
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (PreparedStatement statement = connection.prepareStatement(sql,
+                Statement.RETURN_GENERATED_KEYS)) {
 
             statement.setInt(1, cart.getCustomerId());
-            //statement.setInt(2, cart.getProductId());
             statement.executeUpdate();
+
+            try (ResultSet resultSet = statement.getGeneratedKeys()) {
+                if (resultSet.next()) {
+                    return resultSet.getInt(1);
+                } else {
+                    LOGGER.error("There is no autoincremented index after"
+                            + " trying to add record into table `cart`");
+                    throw new PersistentException();
+                }
+            }
 
         } catch (SQLException e) {
             LOGGER.error("Creating cart an exception occurred. ", e);
             throw new PersistentException(e);
         }
 
-        return 0;
     }
 
     @Override

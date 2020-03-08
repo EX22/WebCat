@@ -36,8 +36,7 @@ public class DispatcherServlet extends HttpServlet {
     private static final int DB_POOL_CHECK_CONNECTION_TIMEOUT = 0;
 
     /**
-     * Instance of logger that provides logging capability for this class'
-     * performance.
+     * Instance of logger that provides logging capability for this class.
      */
     private static final Logger LOGGER
             = LogManager.getLogger(DispatcherServlet.class);
@@ -57,6 +56,7 @@ public class DispatcherServlet extends HttpServlet {
         commandGet.put("/profile.html", ProfileCommand.class);
         commandGet.put("/registration.html", ShowRegistrationCommand.class);
         commandGet.put("/signin.html", SignInCommand.class);
+        commandGet.put("/signout.html", SignOutCommand.class);
         commandGet.put("/starterpage.html", StarterPageCommand.class);
         commandGet.put("/orderstatus.html", OrderStatusCommand.class);
         commandGet.put("/personaldata.html", PersonalDataCommand.class);
@@ -71,6 +71,7 @@ public class DispatcherServlet extends HttpServlet {
         commandPost.put("/registration.html", RegistrationCommand.class);
         commandPost.put("/signin.html", SignInCommand.class);
         commandPost.put("/settings.html", SettingsCommand.class);
+        commandPost.put("/checkout.html", CheckOutCommand.class);
     }
 
     @SuppressWarnings("unchecked")

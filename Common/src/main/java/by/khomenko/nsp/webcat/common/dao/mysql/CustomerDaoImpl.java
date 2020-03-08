@@ -11,8 +11,7 @@ import java.sql.*;
 public class CustomerDaoImpl extends BaseDaoImpl<Customer> implements CustomerDao {
 
     /**
-     * Instance of logger that provides logging capability for this class'
-     * performance.
+     * Instance of logger that provides logging capability for this class
      */
     private static final Logger LOGGER
             = LogManager.getLogger(CustomerDaoImpl.class);
@@ -141,7 +140,7 @@ public class CustomerDaoImpl extends BaseDaoImpl<Customer> implements CustomerDa
     @Override
     public void updateCustomerPass(Integer customerId, String password) throws PersistentException {
 
-        String sql = "UPDATE customers SET password = ? WHERE customer_id = ?";
+        String sql = "UPDATE customers SET password = MD5(?) WHERE customer_id = ?";
 
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
 

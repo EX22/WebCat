@@ -16,7 +16,7 @@
         <a class="py-2 d-none d-md-inline-block" href="profile.html">Profile</a>
         <a class="py-2 d-none d-md-inline-block" href="registration.html">Register</a>
         <a class="py-2 d-none d-md-inline-block" href="signin.html">SingIn</a>
-        <a class="py-2 d-none d-md-inline-block" href="signin.html">SingOut</a>
+        <a class="py-2 d-none d-md-inline-block" href="signout.html">SingOut</a>
         <a class="nav-link" href="cart.html">Cart(<span id="total_items">0</span>)</a>
         <!-- Dropdown -->
               <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
