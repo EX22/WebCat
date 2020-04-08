@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
@@ -13,10 +15,8 @@ public class Customer extends Entity {
     private String login;
     private String password;
     private String name;
-    //TODO Change field below - private Contacts contacts;
-    private String contacts;
+    private List<Contacts> contactsList;
     private String phoneNumber;
-    private String email;
     private String ip;
     private String location;
     private String status;

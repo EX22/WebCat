@@ -1,10 +1,11 @@
 USE `web_cat`;
 
 CREATE TABLE IF NOT EXISTS `administration` (
-	`user_id` INT(11) NOT NULL,
+	`user_id` INT(11) NOT NULL AUTO_INCREMENT,
 	`login` VARCHAR(250) NOT NULL,
 	`password` VARCHAR(250) NOT NULL,
 	`role` TINYINT(4) NOT NULL
+	PRIMARY KEY (`user_id`) USING BTREE
 )
 COLLATE='utf8_general_ci'
 ENGINE=InnoDB
@@ -46,7 +47,7 @@ ENGINE=InnoDB
 
 
 CREATE TABLE IF NOT EXISTS `category` (
-	`category_id` INT(11) NOT NULL,
+	`category_id` INT(11) NOT NULL AUTO_INCREMENT,
 	`category_name` VARCHAR(255) NOT NULL,
 	`category_description` VARCHAR(255) NOT NULL,
 	`in_stock` VARCHAR(50) NOT NULL,
@@ -62,7 +63,6 @@ CREATE TABLE IF NOT EXISTS `customers` (
 	`login` VARCHAR(150) NOT NULL,
 	`password` VARCHAR(250) NOT NULL,
 	`name` VARCHAR(250) NULL DEFAULT NULL,
-	`contacts` VARCHAR(355) NULL DEFAULT NULL,
 	`phone_number` VARCHAR(355) NULL DEFAULT NULL,
 	`email` VARCHAR(355) NULL DEFAULT NULL,
 	`ip` VARCHAR(150) NULL DEFAULT NULL,
@@ -71,6 +71,24 @@ CREATE TABLE IF NOT EXISTS `customers` (
 	`discount` DOUBLE NULL DEFAULT NULL,
 	`role` INT(11) NOT NULL DEFAULT '0',
 	PRIMARY KEY (`customer_id`)
+)
+COLLATE='utf8_general_ci'
+ENGINE=InnoDB
+;
+
+CREATE TABLE IF NOT EXISTS `customer_contacts` (
+    `id` INT(11) NOT NULL AUTO_INCREMENT,
+	`customer_id` INT(11) NULL DEFAULT NULL,
+	`last_name` VARCHAR(250) NULL DEFAULT NULL COLLATE 'utf8_general_ci',
+	`shipping_address` VARCHAR(250) NULL DEFAULT NULL COLLATE 'utf8_general_ci',
+	`country` VARCHAR(250) NULL DEFAULT NULL COLLATE 'utf8_general_ci',
+	`state` VARCHAR(250) NULL DEFAULT NULL COLLATE 'utf8_general_ci',
+	`zip_code` VARCHAR(250) NULL DEFAULT NULL COLLATE 'utf8_general_ci',
+	PRIMARY KEY (`id`) USING BTREE,
+	INDEX `FK_customer_contacts_customers` (`customer_id`) USING BTREE,
+	CONSTRAINT `FK_customer_contacts_customers`
+	 FOREIGN KEY (`customer_id`) REFERENCES `web_cat`.`customers` (`customer_id`)
+	 ON UPDATE RESTRICT ON DELETE RESTRICT
 )
 COLLATE='utf8_general_ci'
 ENGINE=InnoDB

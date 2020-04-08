@@ -50,7 +50,7 @@ public class CustomerDaoImpl extends BaseDaoImpl<Customer> implements CustomerDa
 
     @Override
     public Customer read(Integer identity) throws PersistentException {
-        String sql = "SELECT customer_id, login, password, name, contacts, phone_number, "
+        String sql = "SELECT customer_id, login, password, name, phone_number, "
                 + "email, ip, location, customer_status, discount FROM customers WHERE customer_id = ?";
 
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -65,9 +65,7 @@ public class CustomerDaoImpl extends BaseDaoImpl<Customer> implements CustomerDa
                     customer.setLogin(resultSet.getString("login"));
                     customer.setPassword(resultSet.getString("password"));
                     customer.setName(resultSet.getString("name"));
-                    customer.setContacts(resultSet.getString("contacts"));
                     customer.setPhoneNumber(resultSet.getString("phone_number"));
-                    customer.setEmail(resultSet.getString("email"));
                     customer.setIp(resultSet.getString("ip"));
                     customer.setLocation(resultSet.getString("location"));
                     customer.setStatus(resultSet.getString("customer_status"));
@@ -84,7 +82,7 @@ public class CustomerDaoImpl extends BaseDaoImpl<Customer> implements CustomerDa
 
     @Override
     public Customer read(String login, String password) throws PersistentException {
-        String sql = "SELECT customer_id, login, password, name, contacts, phone_number, "
+        String sql = "SELECT customer_id, login, password, name, phone_number, "
                 + "email, ip, location, customer_status, discount "
                 + "FROM customers WHERE login = ? AND password = MD5(?)";
 
@@ -102,9 +100,7 @@ public class CustomerDaoImpl extends BaseDaoImpl<Customer> implements CustomerDa
                     customer.setLogin(resultSet.getString("login"));
                     customer.setPassword(resultSet.getString("password"));
                     customer.setName(resultSet.getString("name"));
-                    customer.setContacts(resultSet.getString("contacts"));
                     customer.setPhoneNumber(resultSet.getString("phone_number"));
-                    customer.setEmail(resultSet.getString("email"));
                     customer.setIp(resultSet.getString("ip"));
                     customer.setLocation(resultSet.getString("location"));
                     customer.setStatus(resultSet.getString("customer_status"));

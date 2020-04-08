@@ -90,13 +90,6 @@ public class SettingsCommand implements BaseCommand {
 
             Integer customerId = (Integer)request.getSession().getAttribute("customerId");
             String newCustomerFirstName = request.getParameter("customerFirstName");
-            String newCustomerLastName = request.getParameter("customerLastName");
-            String newCustomerPhone = request.getParameter("customerPhone");
-            String newCustomerAddress = request.getParameter("customerAddress");
-            String newCustomerCountry = request.getParameter("customerCountry");
-            String newCustomerState = request.getParameter("customerState");
-            String newCustomerZipCode = request.getParameter("customerZipCode");
-            String newCustomerEmail = request.getParameter("customerEmail");
             String customerCurrentPass = request.getParameter("customerCurrentPassword");
             String customerNewPass = request.getParameter("customerNewPassword");
             String customerConfirmPass = request.getParameter("customerConfirmNewPassword");

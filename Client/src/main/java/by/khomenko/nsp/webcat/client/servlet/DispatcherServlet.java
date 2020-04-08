@@ -61,6 +61,7 @@ public class DispatcherServlet extends HttpServlet {
         commandGet.put("/orderstatus.html", OrderStatusCommand.class);
         commandGet.put("/personaldata.html", PersonalDataCommand.class);
         commandGet.put("/settings.html", SettingsCommand.class);
+        commandGet.put("/thankyoupage.html", ThankYouPageCommand.class);
 
     }
 

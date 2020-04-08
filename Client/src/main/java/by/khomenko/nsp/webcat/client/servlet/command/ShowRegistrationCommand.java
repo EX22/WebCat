@@ -11,11 +11,10 @@ import java.io.IOException;
 public class ShowRegistrationCommand implements BaseCommand {
 
     /**
-     * Instance of logger that provides logging capability for this class'
-     * performance.
+     * Instance of logger that provides logging capability for this class
      */
     private static final Logger LOGGER
-            = LogManager.getLogger(StarterPageCommand.class);
+            = LogManager.getLogger(ShowRegistrationCommand.class);
 
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -23,7 +22,7 @@ public class ShowRegistrationCommand implements BaseCommand {
             request.getRequestDispatcher("WEB-INF/jsp/registration.jsp")
                     .forward(request, response);
         } catch (ServletException e) {
-            LOGGER.error("An exception in execute method in RegistrationCommand class occurred.", e);
+            LOGGER.error("An exception in execute method in ShowRegistrationCommand class occurred.", e);
             response.sendRedirect("error.html");
         }
     }

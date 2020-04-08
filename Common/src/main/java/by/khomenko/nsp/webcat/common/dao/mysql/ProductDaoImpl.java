@@ -236,6 +236,7 @@ public class ProductDaoImpl extends BaseDaoImpl<Product> implements ProductDao {
             statement.setString(8, product.getPhotoPath());
             statement.setString(9, product.getSeoAttributes());
             statement.setString(10, product.getOutputMarker());
+            statement.setInt(11, product.getProductId());
             statement.executeUpdate();
         } catch (SQLException e) {
             LOGGER.error("Updating product an exception occurred. ", e);

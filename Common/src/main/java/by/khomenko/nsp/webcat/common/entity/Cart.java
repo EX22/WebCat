@@ -12,16 +12,16 @@ import java.util.Map;
 @Data
 public class Cart extends Entity {
 
-    Integer cartId;
-    Integer customerId;
+    private Integer cartId;
+    private Integer customerId;
 
     /** Key - productId
      * Value - productCount */
-    Map<Integer, Integer> products = new HashMap<>();
+    private Map<Integer, Integer> products = new HashMap<>();
 
     /** Key - productId
      * Value - product */
-    Map<Integer, Product> productInfo;
+    private Map<Integer, Product> productInfo;
 
     public void addProduct(Integer productId){
 

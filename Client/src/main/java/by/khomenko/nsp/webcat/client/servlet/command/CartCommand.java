@@ -52,6 +52,7 @@ public class CartCommand implements BaseCommand {
 
         try {
 
+            //debug
             //request.getSession().removeAttribute("cart");
 
             Object cartObj = request.getSession().getAttribute("cart");
@@ -76,7 +77,7 @@ public class CartCommand implements BaseCommand {
 
                 //TODO Cart's item quantity
                 response.getWriter().print("100");
-                return;
+                //return;
             }
 
             Map<String, Object> cartMap = new HashMap<>();
@@ -84,19 +85,14 @@ public class CartCommand implements BaseCommand {
             if (cart == null){
 
                 Object customerIdObj = request.getSession().getAttribute("customerId");
+                cart = new Cart();
 
                 if (customerIdObj != null){
 
-                    cart = new Cart();
                     cart.setCustomerId((Integer)customerIdObj);
-                    request.getSession().setAttribute("cart", cart);
-
-                } else {
-
-                    cart = new Cart();
-                    request.getSession().setAttribute("cart", cart);
-
                 }
+
+                request.getSession().setAttribute("cart", cart);
 
             }
 

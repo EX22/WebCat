@@ -10,10 +10,12 @@ import lombok.NoArgsConstructor;
 
 public class Contacts extends Entity {
 
-    String shippingAddressOne;
-    String shippingAddressTwo;
-    String shippingAddressThree;
-    String phoneNumberOne;
-    String phoneNumberTwo;
-    String emailTwo;
+    private Integer id;
+    private Integer customerId;
+    private String lastName;
+    private String shippingAddress;
+    private String country;
+    private String state;
+    private String zipCode;
+
 }

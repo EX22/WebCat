@@ -9,8 +9,7 @@ import org.apache.logging.log4j.Logger;
 public class ProductsCategoryDaoImpl extends BaseDaoImpl<ProductsCategory> implements ProductsCategoryDao {
 
     /**
-     * Instance of logger that provides logging capability for this class'
-     * performance.
+     * Instance of logger that provides logging capability for this class
      */
     private static final Logger LOGGER
             = LogManager.getLogger(ProductsCategoryDaoImpl.class);

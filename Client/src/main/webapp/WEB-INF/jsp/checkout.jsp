@@ -27,7 +27,7 @@
         <div class="col-md-4 order-md-2 mb-4">
           <h4 class="d-flex justify-content-between align-items-center mb-3">
             <span class="text-muted">Your cart</span>
-            <span class="badge badge-secondary badge-pill"><c:out value="${customerCart.size}"/></span>
+            <span class="badge badge-secondary badge-pill">Cart size <c:out value=""/></span>
           </h4>
           <ul class="list-group mb-3">
 
@@ -70,7 +70,7 @@
             <div class="row">
               <div class="col-md-6 mb-3">
                 <label for="firstName">First name</label>
-                <input type="text" class="form-control" id="firstName" name="customerFirstName" placeholder="" value="" required>
+                <input type="text" class="form-control" id="firstName" name="customerFirstName" placeholder="${customer.name}" value="" required>
                 <div class="invalid-feedback">
                   Valid first name is required.
                 </div>
@@ -86,7 +86,7 @@
 
             <div class="mb-3">
               <label for="email">Email/Login</label>
-              <input type="email" class="form-control" id="email" name="customerEmail" placeholder="you@example.com">
+              <input type="email" class="form-control" id="email" name="customerEmail" placeholder="${customer.login}">
               <div class="invalid-feedback">
                 Please enter a valid email address for shipping updates.
               </div>
@@ -94,7 +94,7 @@
 
             <div class="mb-3">
               <label for="phone">Phone number</label>
-              <input type="text" class="form-control" id="phone" name="customerPhone" placeholder="+375" required>
+              <input type="text" class="form-control" id="phone" name="customerPhone" placeholder="+${customer.phoneNumber}" required>
               <div class="invalid-feedback">
                 Please enter your phone number.
               </div>
@@ -148,7 +148,7 @@
             </div>
 
             <hr class="mb-4">
-            <button class="btn btn-primary btn-lg btn-block" type="submit">Continue to checkout</button>
+            <button class="btn btn-primary btn-lg btn-block" type="submit">To place an order</button>
           </form>
         </div>
       </div>

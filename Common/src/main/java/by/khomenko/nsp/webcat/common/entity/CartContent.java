@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 public class CartContent extends Entity {
 
-    Integer cartId;
-    Integer productId;
-    Integer productCount;
+    private Integer cartId;
+    private Integer productId;
+    private Integer productCount;
 }
