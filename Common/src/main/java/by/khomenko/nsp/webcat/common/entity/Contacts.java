@@ -18,4 +18,16 @@ public class Contacts extends Entity {
     private String state;
     private String zipCode;
 
+    public Contacts (Integer customerId, String customerLastName,
+                     String customerAddress, String customerCountry,
+                     String customerState, String customerZipCode) {
+
+        this.customerId = customerId;
+        this.lastName = customerLastName;
+        this.shippingAddress = customerAddress;
+        this.country = customerCountry;
+        this.state = customerState;
+        this.zipCode = customerZipCode;
+    }
+
 }

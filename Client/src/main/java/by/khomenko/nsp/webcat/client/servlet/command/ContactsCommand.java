@@ -50,7 +50,8 @@ public class ContactsCommand implements BaseCommand {
             throws PersistentException, ValidationException {
 
 
-        try (CustomerDao customerDao = DaoFactory.getInstance().createDao(CustomerDao.class)) {
+        try (CustomerDao customerDao = DaoFactory.getInstance().createDao(CustomerDao.class);
+             ContactsDao contactsDao = DaoFactory.getInstance().createDao(ContactsDao.class)) {
 
 
 

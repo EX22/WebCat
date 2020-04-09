@@ -39,12 +39,18 @@ public class SettingsCommand implements BaseCommand {
 
     public void updateProfileSettings(Integer currentCustomerId,
                                       String customerName, String currentPass,
-                                      String newPass, String confirmPass)
+                                      String newPass, String confirmPass,
+                                      String customerLastName, String customerEmail,
+                                      String customerPhone, String customerAddress,
+                                      String customerCountry, String customerState,
+                                      String customerZipCode)
             throws PersistentException, ValidationException {
 
         Customer loggedCustomer;
 
         try (CustomerDao customerDao = DaoFactory.getInstance().createDao(CustomerDao.class)) {
+
+            ContactsCommand contactsCommand = new ContactsCommand();
 
             if ((customerName != null) && (!"".equals(customerName))) {
 
@@ -89,13 +95,21 @@ public class SettingsCommand implements BaseCommand {
         try {
 
             Integer customerId = (Integer)request.getSession().getAttribute("customerId");
-            String newCustomerFirstName = request.getParameter("customerFirstName");
+            String customerFirstName = request.getParameter("customerFirstName");
             String customerCurrentPass = request.getParameter("customerCurrentPassword");
             String customerNewPass = request.getParameter("customerNewPassword");
             String customerConfirmPass = request.getParameter("customerConfirmNewPassword");
+            String customerLastName = request.getParameter("customerLastName");
+            String customerEmail = request.getParameter("customerEmail");
+            String customerPhone = request.getParameter("customerPhone");
+            String customerAddress = request.getParameter("customerAddress");
+            String customerCountry = request.getParameter("customerCountry");
+            String customerState = request.getParameter("customerState");
+            String customerZipCode = request.getParameter("customerZipCode");
 
-            updateProfileSettings(customerId, newCustomerFirstName, customerCurrentPass,
-                    customerNewPass, customerConfirmPass);
+            updateProfileSettings(customerId, customerFirstName, customerCurrentPass,
+                    customerNewPass, customerConfirmPass, customerLastName, customerEmail,
+                    customerPhone, customerAddress, customerCountry, customerState, customerZipCode);
 
             Map<String, Object> profileMap = loadProfileSettings(customerId);
             for (String key : profileMap.keySet()) {

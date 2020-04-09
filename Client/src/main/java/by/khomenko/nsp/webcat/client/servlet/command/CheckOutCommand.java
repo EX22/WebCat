@@ -65,7 +65,7 @@ public class CheckOutCommand implements BaseCommand {
 
     }
 
-    public void setCustomerContacts(Integer currentCustomerId, String customerFirstName,
+    public void setCustomerContacts(Integer customerId, String customerFirstName,
                                        String customerLastName, String customerPhone,
                                        String customerAddress, String customerCountry,
                                        String customerState, String customerZipCode)
@@ -77,12 +77,15 @@ public class CheckOutCommand implements BaseCommand {
 
             if ((customerFirstName != null) && (!"".equals(customerFirstName))) {
 
-                customerDao.updateCustomerName(currentCustomerId, customerFirstName);
+                customerDao.updateCustomerName(customerId, customerFirstName);
             }
 
+            if (customerId != null) {
+                Contacts contacts = new Contacts(customerId, customerLastName, customerAddress,
+                        customerCountry, customerState, customerZipCode);
 
-
-
+                contactsDao.create(contacts);
+            }
 
         } catch (Exception e) {
             LOGGER.error("Setting customer's contacts in CheckOutCommand class an "
@@ -110,7 +113,9 @@ public class CheckOutCommand implements BaseCommand {
             setCustomerContacts(customerId, customerFirstName, customerLastName, customerPhone,
                     customerAddress, customerCountry, customerState, customerZipCode);
 
+
             //TODO Send login and password to customer by email.
+            //TODO Check if customer exists in order to not creating new customer in DB, and entry in contacts table.
             if (customerEmail != null) {
                 createNewCustomerAccount(customerEmail);
             }

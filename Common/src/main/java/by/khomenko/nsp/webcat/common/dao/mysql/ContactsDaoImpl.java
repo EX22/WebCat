@@ -19,7 +19,7 @@ public class ContactsDaoImpl extends BaseDaoImpl<Contacts> implements ContactsDa
     private static final Logger LOGGER
             = LogManager.getLogger(ContactsDaoImpl.class);
 
-    ContactsDaoImpl() throws PersistentException {
+    public ContactsDaoImpl() throws PersistentException {
     }
 
     @Override
