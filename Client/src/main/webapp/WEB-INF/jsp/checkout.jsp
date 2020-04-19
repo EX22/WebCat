@@ -63,10 +63,28 @@
           </form>
         </div>
 
+        <c:if test="${customer != null && not empty customer.contactsList}">
+            <div class="col-md-8 order-md-1">
+                  <h4 class="mb-3">Shipping address</h4>
+                  <form method="post" class="needs-validation" novalidate
+                    onsubmit="return true" id="selectAddressCheckOutForm">
+                    <input type = "hidden" value = "selectAddress" name="action"/>
+                    <c:forEach var="contacts" items="${customer.contactsList}" varStatus="loop">
+
+                        <input type="radio" id="${contacts.id}" name="selectedContacts" value="${contacts.id}">
+                        <label for="${contacts.id}"><c:out value="${contacts.shippingAddress}"/></label><br>
+                    </c:forEach>
+                    <hr class="mb-4">
+                        <button class="btn btn-primary btn-lg btn-block" type="submit">To place an order</button>
+                  </form>
+            </div>
+        </c:if>
+
         <div class="col-md-8 order-md-1">
           <h4 class="mb-3">Shipping address</h4>
           <form method="post" class="needs-validation" novalidate
             onsubmit="return validateCheckOutForm()" id="checkOutForm">
+            <input type = "hidden" value = "newAddress" name="action"/>
             <div class="row">
               <div class="col-md-6 mb-3">
                 <label for="firstName">First name</label>

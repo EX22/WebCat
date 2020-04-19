@@ -50,7 +50,7 @@ public class DispatcherServlet extends HttpServlet {
         commandGet.put("/cart.html", CartCommand.class);
         commandGet.put("/catalog.html", CatalogCommand.class);
         commandGet.put("/category.html", CategoryCommand.class);
-        commandGet.put("/checkout.html", CheckOutCommand.class);
+        commandGet.put("/checkout.html", ShowCheckOutCommand.class);
 
         commandGet.put("/product.html", ProductCommand.class);
         commandGet.put("/profile.html", ProfileCommand.class);

@@ -10,6 +10,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ContactsDaoImpl extends BaseDaoImpl<Contacts> implements ContactsDao {
 
@@ -81,6 +83,38 @@ public class ContactsDaoImpl extends BaseDaoImpl<Contacts> implements ContactsDa
             return contacts;
         } catch (SQLException e) {
             LOGGER.error("Reading table `customer_contacts` by customer id an exception occurred. ", e);
+            throw new PersistentException(e);
+        }
+    }
+
+    public List<Contacts> readList(Integer identity) throws PersistentException {
+        String sql = "SELECT id, customer_id, last_name, shipping_address, country,"
+                + " state, zip_code FROM customer_contacts  WHERE customer_id = ?";
+
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setInt(1, identity);
+            Contacts contacts;
+            List<Contacts> contactsList = new ArrayList<>();
+
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    contacts = new Contacts();
+                    contacts.setId(resultSet.getInt("id"));
+                    contacts.setCustomerId(identity);
+                    contacts.setLastName(resultSet.getString("last_name"));
+                    contacts.setShippingAddress(resultSet.getString("shipping_address"));
+                    contacts.setCountry(resultSet.getString("country"));
+                    contacts.setState(resultSet.getString("state"));
+                    contacts.setZipCode(resultSet.getString("zip_code"));
+
+                    contactsList.add(contacts);
+                }
+            }
+            return contactsList;
+        } catch (SQLException e) {
+            LOGGER.error("Reading table `customer_contacts` by customer id in readList method"
+                    + " an exception occurred. ", e);
             throw new PersistentException(e);
         }
     }

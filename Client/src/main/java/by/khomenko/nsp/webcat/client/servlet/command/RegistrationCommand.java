@@ -61,7 +61,7 @@ public class RegistrationCommand implements BaseCommand {
             String password = request.getParameter("password");
             String confirmPassword = request.getParameter("confirmPassword");
 
-            if (login == null && password == null && confirmPassword == null) {
+            if (login == null || password == null || confirmPassword == null) {
                 //TODO Verify how it works.
                 LOGGER.warn("One of the three registration parameters is null.");
                 response.sendRedirect("error.html");

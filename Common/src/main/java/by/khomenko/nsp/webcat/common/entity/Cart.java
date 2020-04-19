@@ -14,6 +14,7 @@ public class Cart extends Entity {
 
     private Integer cartId;
     private Integer customerId;
+    private String cartStatus;
 
     /** Key - productId
      * Value - productCount */
@@ -22,6 +23,10 @@ public class Cart extends Entity {
     /** Key - productId
      * Value - product */
     private Map<Integer, Product> productInfo;
+
+    public Cart(Integer customerId) {
+        this.customerId = customerId;
+    }
 
     public void addProduct(Integer productId){
 

@@ -1,6 +1,8 @@
 package by.khomenko.nsp.webcat.common.dao.mysql;
 
+import by.khomenko.nsp.webcat.common.dao.ContactsDao;
 import by.khomenko.nsp.webcat.common.dao.CustomerDao;
+import by.khomenko.nsp.webcat.common.dao.DaoFactory;
 import by.khomenko.nsp.webcat.common.entity.Customer;
 import by.khomenko.nsp.webcat.common.exception.PersistentException;
 import org.apache.logging.log4j.LogManager;
@@ -70,6 +72,8 @@ public class CustomerDaoImpl extends BaseDaoImpl<Customer> implements CustomerDa
                     customer.setLocation(resultSet.getString("location"));
                     customer.setStatus(resultSet.getString("customer_status"));
                     customer.setDiscount(resultSet.getDouble("discount"));
+                    ContactsDao contactsDao = DaoFactory.getInstance().createDao(ContactsDao.class);
+                    customer.setContactsList(contactsDao.readList(identity));
 
                 }
             }
@@ -174,10 +178,43 @@ public class CustomerDaoImpl extends BaseDaoImpl<Customer> implements CustomerDa
     @Override
     public void update(Customer customer) throws PersistentException {
 
+        String sql = "UPDATE customers SET login = ?, password = ?, name = ?,"
+                + " phone_number = ?, ip = ?, location = ?, customer_status = ?,"
+                + " discount = ?, role = ? WHERE id = ?";
+
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setString(1, customer.getLogin());
+            statement.setString(2, customer.getPassword());
+            statement.setString(3, customer.getName());
+            statement.setString(4, customer.getPhoneNumber());
+            statement.setString(5, customer.getIp());
+            statement.setString(6, customer.getLocation());
+            statement.setString(7, customer.getStatus());
+            statement.setDouble(8, customer.getDiscount());
+            statement.setInt(9, customer.getRole().getIdentity());
+            statement.setInt(10, customer.getId());
+            statement.executeUpdate();
+
+        } catch (SQLException e) {
+            LOGGER.error("Updating customer an exception occurred. ", e);
+            throw new PersistentException(e);
+        }
+
     }
 
     @Override
     public void delete(Integer identity) throws PersistentException {
 
+        String sql = "DELETE FROM customers WHERE id = ?";
+
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setInt(1, identity);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            LOGGER.error("Deleting customer an exception occurred. ", e);
+            throw new PersistentException(e);
+        }
     }
 }

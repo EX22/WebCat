@@ -17,8 +17,7 @@ import java.util.Map;
 public class StarterPageCommand implements BaseCommand {
 
     /**
-     * Instance of logger that provides logging capability for this class'
-     * performance.
+     * Instance of logger that provides logging capability for this class
      */
     private static final Logger LOGGER
             = LogManager.getLogger(StarterPageCommand.class);

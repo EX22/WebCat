@@ -16,20 +16,20 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 </head>
-<body>
-    <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+    <body>
+        <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
 
 
-      <main role="main" class="inner cover">
-        <h1 class="cover-heading">Thank you for your order.</h1>
-        <p class="lead">Our managers connect with you as soon as possible.</p>
-        <p class="lead">
-          <a href="catalog.html" class="btn btn-lg btn-secondary">Back to catalog</a>
-        </p>
-      </main>
-    </div>
+          <main role="main" class="inner cover">
+            <h1 class="cover-heading">Thank you for your order.</h1>
+            <p class="lead">Our managers connect with you as soon as possible.</p>
+            <p class="lead">
+              <a href="catalog.html" class="btn btn-lg btn-secondary">Back to catalog</a>
+            </p>
+          </main>
+        </div>
 
-    <jsp:include page="footer.jsp"/>
+        <jsp:include page="footer.jsp"/>
 
-</body>
+    </body>
 </html>

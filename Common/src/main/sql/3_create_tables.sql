@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS `blacklist` (
 	INDEX `FK__customers` (`customer_id`),
 	CONSTRAINT `FK__customers` FOREIGN KEY (`customer_id`) REFERENCES `customers` (`customer_id`)
 )
-COLLATE='latin1_swedish_ci'
+COLLATE='utf8_general_ci'
 ENGINE=InnoDB
 ;
 
@@ -40,7 +40,7 @@ CREATE TABLE IF NOT EXISTS `cart_content` (
 	CONSTRAINT `FK__cart` FOREIGN KEY (`cart_id`) REFERENCES `cart` (`cart_id`),
 	CONSTRAINT `FK__products` FOREIGN KEY (`product_id`) REFERENCES `products` (`product_id`)
 )
-COLLATE='latin1_swedish_ci'
+COLLATE='utf8_general_ci'
 ENGINE=InnoDB
 ;
 
@@ -97,19 +97,23 @@ ENGINE=InnoDB
 
 
 CREATE TABLE IF NOT EXISTS `orders` (
-	`order_id` INT(11) NOT NULL,
+	`order_id` INT(11) NOT NULL AUTO_INCREMENT,
 	`customer_id` INT(11) NOT NULL,
-	`order_price` DOUBLE NOT NULL,
-	`order_status` VARCHAR(50) NOT NULL,
-	`order_date` VARCHAR(50) NOT NULL,
-	`shipping_address` VARCHAR(250) NOT NULL,
-	PRIMARY KEY (`order_id`),
-	INDEX `FK_orders_customers` (`customer_id`),
-	CONSTRAINT `FK_orders_customers` FOREIGN KEY (`customer_id`) REFERENCES `customers` (`customer_id`)
+	`cart_id` INT(11) NOT NULL,
+	`order_price` DOUBLE(22,0) NOT NULL,
+	`order_status` VARCHAR(50) NOT NULL COLLATE 'utf8_general_ci',
+	`order_date` VARCHAR(50) NOT NULL COLLATE 'utf8_general_ci',
+	`shipping_address` VARCHAR(250) NOT NULL COLLATE 'utf8_general_ci',
+	PRIMARY KEY (`order_id`) USING BTREE,
+	INDEX `FK_orders_customers` (`customer_id`) USING BTREE,
+	INDEX `FK_orders_cart` (`cart_id`) USING BTREE,
+	CONSTRAINT `FK_orders_cart` FOREIGN KEY (`cart_id`) REFERENCES `web_cat`.`cart` (`cart_id`) ON UPDATE RESTRICT ON DELETE RESTRICT,
+	CONSTRAINT `FK_orders_customers` FOREIGN KEY (`customer_id`) REFERENCES `web_cat`.`customers` (`customer_id`) ON UPDATE RESTRICT ON DELETE RESTRICT
 )
 COLLATE='utf8_general_ci'
 ENGINE=InnoDB
 ;
+
 
 
 CREATE TABLE IF NOT EXISTS `order_details` (

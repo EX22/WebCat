@@ -4,7 +4,6 @@ import by.khomenko.nsp.webcat.common.dao.CartDao;
 import by.khomenko.nsp.webcat.common.dao.DaoFactory;
 import by.khomenko.nsp.webcat.common.dao.ProductDao;
 import by.khomenko.nsp.webcat.common.entity.Cart;
-import by.khomenko.nsp.webcat.common.entity.CartContent;
 import by.khomenko.nsp.webcat.common.entity.Product;
 import by.khomenko.nsp.webcat.common.exception.PersistentException;
 import org.apache.logging.log4j.LogManager;
@@ -14,16 +13,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 public class CartDaoImpl extends BaseDaoImpl<Cart> implements CartDao {
 
 
     /**
-     * Instance of logger that provides logging capability for this class'
-     * performance.
+     * Instance of logger that provides logging capability for this class
      */
     private static final Logger LOGGER
             = LogManager.getLogger(CartDaoImpl.class);
@@ -34,12 +30,13 @@ public class CartDaoImpl extends BaseDaoImpl<Cart> implements CartDao {
 
     @Override
     public Integer create(Cart cart) throws PersistentException {
-        String sql = "INSERT INTO cart (customer_id) VALUES (?)";
+        String sql = "INSERT INTO cart (customer_id, cart_status) VALUES (?)";
 
         try (PreparedStatement statement = connection.prepareStatement(sql,
                 Statement.RETURN_GENERATED_KEYS)) {
 
             statement.setInt(1, cart.getCustomerId());
+            statement.setString(2, cart.getCartStatus());
             statement.executeUpdate();
 
             try (ResultSet resultSet = statement.getGeneratedKeys()) {
@@ -67,7 +64,7 @@ public class CartDaoImpl extends BaseDaoImpl<Cart> implements CartDao {
     @Override
     public Cart readCartByCustomerId(Integer customerId) throws PersistentException {
 
-        String sql = "SELECT cart_id FROM cart WHERE customer_id = ?";
+        String sql = "SELECT cart_id, cart_status FROM cart WHERE customer_id = ?";
         String sql2 = "SELECT product_id, product_count FROM cart_content WHERE cart_id = ?";
 
         try (PreparedStatement statement = connection.prepareStatement(sql);
@@ -80,11 +77,12 @@ public class CartDaoImpl extends BaseDaoImpl<Cart> implements CartDao {
 
             try (ResultSet resultSet = statement.executeQuery()) {
 
-                while (resultSet.next()) {
+                    if (resultSet.next()) {
 
                     cart = new Cart();
                     cart.setCustomerId(customerId);
                     cart.setCartId(resultSet.getInt("cart_id"));
+                    cart.setCartStatus(resultSet.getString("cart_status"));
 
                 }
             }
@@ -95,7 +93,7 @@ public class CartDaoImpl extends BaseDaoImpl<Cart> implements CartDao {
 
                 try (ResultSet resultSet = statement2.executeQuery()) {
 
-                    while (resultSet.next()) {
+                    if (resultSet.next()) {
 
                         products.put(resultSet.getInt("product_id"),
                                 resultSet.getInt("product_count"));
@@ -148,6 +146,7 @@ public class CartDaoImpl extends BaseDaoImpl<Cart> implements CartDao {
     @Override
     public void update(Cart cart) throws PersistentException {
 
+        //TODO Use INSERT ... ON DUPLICATE KEY UPDATE Statement
     }
 
     @Override

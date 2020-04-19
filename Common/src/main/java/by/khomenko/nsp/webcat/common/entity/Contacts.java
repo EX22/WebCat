@@ -30,4 +30,12 @@ public class Contacts extends Entity {
         this.zipCode = customerZipCode;
     }
 
+    @Override
+    public String toString() {
+        return "lastName='" + lastName + '\''
+                + ", shippingAddress='" + shippingAddress + '\''
+                + ", country='" + country + '\''
+                + ", state='" + state + '\''
+                + ", zipCode='" + zipCode + '\'';
+    }
 }
