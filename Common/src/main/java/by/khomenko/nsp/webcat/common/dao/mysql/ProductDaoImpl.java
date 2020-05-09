@@ -1,7 +1,6 @@
 package by.khomenko.nsp.webcat.common.dao.mysql;
 
 import by.khomenko.nsp.webcat.common.dao.ProductDao;
-import by.khomenko.nsp.webcat.common.entity.Category;
 import by.khomenko.nsp.webcat.common.entity.Product;
 import by.khomenko.nsp.webcat.common.exception.PersistentException;
 import org.apache.logging.log4j.LogManager;
@@ -17,8 +16,7 @@ import java.util.stream.Collectors;
 public class ProductDaoImpl extends BaseDaoImpl<Product> implements ProductDao {
 
     /**
-     * Instance of logger that provides logging capability for this class'
-     * performance.
+     * Instance of logger that provides logging capability for this class.
      */
     private static final Logger LOGGER
             = LogManager.getLogger(ProductDaoImpl.class);
@@ -29,13 +27,13 @@ public class ProductDaoImpl extends BaseDaoImpl<Product> implements ProductDao {
 
     @Override
     public Integer create(Product product) throws PersistentException {
-        String sql = "INSERT INTO products (category_id, product_name, short_description, full_description"
-                + " product_price, product_discount, in_stock, photo_path, seo_attributes, output_marker)"
+
+        String sql = "INSERT INTO products (category_id, product_name, short_description,"
+                + " full_description product_price, product_discount, in_stock, photo_path,"
+                + " seo_attributes, output_marker)"
                 + " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-        try (PreparedStatement statement = connection.prepareStatement(sql,
-                Statement.RETURN_GENERATED_KEYS)) {
-
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
 
             if (product.getCategoryId() != null) {
                 statement.setInt(1, product.getCategoryId());
@@ -53,20 +51,12 @@ public class ProductDaoImpl extends BaseDaoImpl<Product> implements ProductDao {
             statement.setString(10, product.getOutputMarker());
             statement.executeUpdate();
 
-            try (ResultSet resultSet = statement.getGeneratedKeys()) {
 
-                if (resultSet.next()) {
-                    return resultSet.getInt(1);
-                } else {
-                    LOGGER.error("There is no autoincremented index after"
-                            + " trying to add record into table `products`");
-                    throw new PersistentException();
-                }
-            }
         } catch (SQLException e) {
             LOGGER.error("Creating product an exception occurred. ", e);
             throw new PersistentException(e);
         }
+        return 0;
     }
 
     @Override

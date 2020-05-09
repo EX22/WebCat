@@ -31,12 +31,12 @@
           </h4>
           <ul class="list-group mb-3">
 
-                  <c:forEach var="product" items="${customerCart.products}" varStatus="loop">
+                  <c:forEach var="product" items="${cartContent.productInfo}" varStatus="loop">
                       <li class="list-group-item d-flex justify-content-between lh-condensed">
                         <div>
-                          <h6 class="my-0"><c:out value="${product.productName}"/></h6>
+                          <h6 class="my-0"><c:out value="${product.value.productName}"/></h6>
                         </div>
-                        <span class="text-muted"><c:out value="${product.productPrice}"/>$</span>
+                        <span class="text-muted"><c:out value="${product.value.productPrice}"/>$</span>
                       </li>
                   </c:forEach>
 

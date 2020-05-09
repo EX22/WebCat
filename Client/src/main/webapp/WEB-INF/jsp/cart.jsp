@@ -32,28 +32,21 @@
             <span class="badge badge-secondary badge-pill">Products amount <c:out value=""/></span>
           </h4>
           <ul class="list-group mb-3">
-              <c:forEach var="product" items="${products}" varStatus="loop">
+              <c:forEach var="product" items="${cartContent.productInfo}" varStatus="loop">
                   <div class="card mb-3" style="max-width: 540px;">
                     <div class="row no-gutters">
                       <div class="col-md-4">
-                        <img src="/images/${product.photoPath}" class="card-img" alt="...">
+                        <img src="/images/${product.value.photoPath}" class="card-img" alt="...">
                       </div>
                       <div class="col-md-8">
                         <div class="card-body">
-                          <h5 class="card-title"><c:out value="${product.productName}"/></h5>
-                          <p class="card-text"><c:out value="${product.productPrice}"/>$</p>
+                          <h5 class="card-title"><c:out value="${product.value.productName}"/></h5>
+                          <p class="card-text"><c:out value="${product.value.productPrice}"/>$</p>
                           <a href="#" class="badge badge-secondary">Remove</a>
                           <div class="form-row align-items-center">
                               <div class="col-auto my-1">
                                 <label class="my-1 mr-2" for="inlineFormCustomSelectPref">Quantity</label>
-                                <select class="custom-select mr-sm-2" id="inlineFormCustomSelect">
-                                  <option selected>Choose...</option>
-                                  <option value="1">1</option>
-                                  <option value="2">2</option>
-                                  <option value="3">3</option>
-                                  <option value="4">4</option>
-                                  <option value="5">5</option>
-                                </select>
+                                <input type="text" class="form-control" value="${cartContent.products[product.value.productId]}"/>
                               </div>
                           </div>
                         </div>
@@ -65,7 +58,7 @@
 
           <form class="card p-2">
             <div class="input-group">
-              <input type="text" class="form-control" placeholder="Promo code">
+              <input type="text" class="form-control" placeholder="Promo code"/>
               <div class="input-group-append">
                 <button type="submit" class="btn btn-secondary">Redeem</button>
               </div>

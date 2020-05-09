@@ -30,7 +30,7 @@ public class DaoFactory {
 
             classes.put(AdministrationDao.class, AdministrationDaoImpl.class);
             classes.put(BlackListDao.class, BlackListDaoImpl.class);
-            classes.put(CartDao.class, CartDaoImpl.class);
+            classes.put(CartContentDao.class, CartContentDaoImpl.class);
             classes.put(CategoryDao.class, CategoryDaoImpl.class);
             classes.put(CustomerDao.class, CustomerDaoImpl.class);
             classes.put(ContactsDao.class, ContactsDaoImpl.class);

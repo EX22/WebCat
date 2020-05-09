@@ -1,6 +1,7 @@
 package by.khomenko.nsp.webcat.client.servlet.command;
 
 import by.khomenko.nsp.webcat.common.dao.*;
+import by.khomenko.nsp.webcat.common.dao.mysql.ContactsDaoImpl;
 import by.khomenko.nsp.webcat.common.entity.*;
 import by.khomenko.nsp.webcat.common.exception.PersistentException;
 import by.khomenko.nsp.webcat.common.exception.ValidationException;
@@ -13,8 +14,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class CheckOutCommand implements BaseCommand {
@@ -29,11 +30,11 @@ public class CheckOutCommand implements BaseCommand {
 
         Map<String, Object> map = new HashMap<>();
 
-        try (CartDao cartDao = DaoFactory.getInstance().createDao(CartDao.class)) {
+        try (CartContentDao cartContentDao = DaoFactory.getInstance().createDao(CartContentDao.class)) {
 
-            Cart customerCart = cartDao.readCartByCustomerId(customerId);
+            CartContent cartContent = cartContentDao.read(customerId);
 
-            map.put("customerCart", customerCart);
+            map.put("cartContent", cartContent);
 
         } catch (Exception e) {
             LOGGER.error("Loading checkout page an exception occurred.", e);
@@ -89,19 +90,30 @@ public class CheckOutCommand implements BaseCommand {
         }
     }
 
-    public void createNewOrder(Cart cart, Contacts contacts)
+    public void createNewOrder(CartContent cartContent, Contacts contacts)
             throws PersistentException {
 
-        try(OrderDao orderDao = DaoFactory.getInstance().createDao(OrderDao.class)) {
+        try(OrderDao orderDao = DaoFactory.getInstance().createDao(OrderDao.class);
+        OrderDetailsDao orderDetailsDao = DaoFactory.getInstance().createDao(OrderDetailsDao.class)) {
 
             LocalDateTime localDateTime = LocalDateTime.now();
             DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
-            Order newCustomerOrder = new Order(null, cart.getCustomerId(), cart.getCartId(),
-                    countOrderPrice(cart), Order.STATUS_NEW, dateTimeFormatter.format(localDateTime),
-                    contacts.toString());
 
-            orderDao.create(newCustomerOrder);
+            Order newCustomerOrder = new Order(null, cartContent.getCustomerId(),
+                        countOrderPrice(cartContent), Order.STATUS_NEW,
+                    dateTimeFormatter.format(localDateTime),contacts.toString());
+
+            Integer orderId = orderDao.create(newCustomerOrder);
+            for (Map.Entry<Integer, Integer> entry: cartContent.getProducts().entrySet()){
+                Integer productId = entry.getKey();
+                Integer productCount = entry.getValue();
+                OrderDetails orderDetails = new OrderDetails(orderId, productId,
+                        cartContent.getProductInfo().get(productId).getProductPrice(),
+                        productCount, 0.0);
+                orderDetailsDao.create(orderDetails);
+
+            }
 
         } catch (Exception e) {
             LOGGER.error("Creating new order in CheckOutCommand class an "
@@ -110,15 +122,18 @@ public class CheckOutCommand implements BaseCommand {
         }
     }
 
-    public double countOrderPrice(Cart cart) throws PersistentException {
-        try(CartDao cartDao = DaoFactory.getInstance().createDao(CartDao.class)) {
+    public double countOrderPrice(CartContent cartContent) throws PersistentException {
 
-            Cart cart1 = cartDao.loadCartProductInfo(cart);
+        try(ProductDao productDao = DaoFactory.getInstance().createDao(ProductDao.class)) {
+
+            List<Product> products = productDao.readProductsById(cartContent.getProducts().keySet());
+            cartContent.setProductInfo(products);
+
             double orderPrice = 0.0;
-            for (Map.Entry<Integer, Integer> entry : cart1.getProducts().entrySet()) {
+            for (Map.Entry<Integer, Integer> entry : cartContent.getProducts().entrySet()) {
                 Integer productId = entry.getKey();
                   Integer productCount = entry.getValue();
-                Product product = cart.getProductInfo().get(productId);
+                Product product = cartContent.getProductInfo().get(productId);
                 orderPrice = orderPrice + product.getProductPrice()*productCount;
             }
             return orderPrice;
@@ -131,14 +146,32 @@ public class CheckOutCommand implements BaseCommand {
 
     }
 
+    private <T>T getObjectFromSession(Class<T> cartContentClass,
+                                      String attributeName, HttpServletRequest request) {
+
+        Object cartObj = request.getSession().getAttribute(attributeName);
+        T result = null;
+
+        if (cartObj != null){
+            result = (T) cartObj;
+        }
+        return result;
+    }
+
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-        try {
+        try (CartContentDao cartContentDao = DaoFactory.getInstance().createDao(CartContentDao.class)) {
 
             Integer customerId = (Integer)request.getSession().getAttribute("customerId");
             String action = request.getParameter("action");
             Contacts contacts;
+            CartContent cartContent;
+
+
+            cartContent = getObjectFromSession(CartContent.class,
+                        "cartContent", request);
+
 
             if ("newAddress".equals(action)) {
 
@@ -159,11 +192,14 @@ public class CheckOutCommand implements BaseCommand {
                     return;
                 }
 
-                //TODO Check if customer exists in order to not creating new customer in DB, and entry in contacts table.
+                //TODO Check if customer exists in order to not creating new customer in DB,
+                // and entry in contacts table.
 
                 if (customerId == null) {
 
                     customerId = createNewCustomerAccount(customerEmail);
+                    cartContent.setCustomerId(customerId);
+                    cartContentDao.create(cartContent);
 
                     //TODO Send login and password to customer by email.
 
@@ -173,13 +209,15 @@ public class CheckOutCommand implements BaseCommand {
                         customerAddress, customerCountry, customerState, customerZipCode);
 
             } else {
-                response.sendRedirect("settings.html");
-                return;
+                ContactsDao contactsDao = DaoFactory.getInstance().createDao(ContactsDao.class);
+                contacts = contactsDao.read(customerId);
+
             }
 
-            Map<String, Object> customerCart = load(customerId);
-            Cart cart = (Cart) customerCart.get("customerCart");
-            createNewOrder(cart, contacts);
+
+
+
+            createNewOrder(cartContent, contacts);
 
             response.sendRedirect("thankyoupage.html");
 

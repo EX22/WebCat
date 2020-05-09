@@ -28,18 +28,17 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
 
     @Override
     public Integer create(Order order) throws PersistentException {
-        String sql = "INSERT INTO orders (customer_id, cart_id, order_price,"
-                + " order_status, order_date, shipping_address) VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO orders (customer_id, order_price,"
+                + " order_status, order_date, shipping_address) VALUES (?, ?, ?, ?, ?)";
 
         try (PreparedStatement statement = connection.prepareStatement(sql,
                 Statement.RETURN_GENERATED_KEYS)) {
 
             statement.setInt(1, order.getCustomerId());
-            statement.setInt(2, order.getCartId());
-            statement.setDouble(3, order.getOrderPrice());
-            statement.setString(4, order.getOrderStatus());
-            statement.setString(5, order.getOrderDate());
-            statement.setString(6, order.getShippingAddress());
+            statement.setDouble(2, order.getOrderPrice());
+            statement.setString(3, order.getOrderStatus());
+            statement.setString(4, order.getOrderDate());
+            statement.setString(5, order.getShippingAddress());
             statement.executeUpdate();
 
             try (ResultSet resultSet = statement.getGeneratedKeys()) {
@@ -60,7 +59,7 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
 
     @Override
     public Order read(Integer identity) throws PersistentException {
-        String sql = "SELECT customer_id, cart_id, order_price, order_status,"
+        String sql = "SELECT customer_id, order_price, order_status,"
                 + " order_date, shipping_address"
                 + " FROM orders WHERE order_id = ?";
 
@@ -75,7 +74,6 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
                 order = new Order();
                 order.setOrderId(identity);
                 order.setCustomerId(resultSet.getInt("customer_id"));
-                order.setCartId(resultSet.getInt("cart_id"));
                 order.setOrderPrice(resultSet.getDouble("order_price"));
                 order.setOrderStatus(resultSet.getString("order_status"));
                 order.setOrderDate(resultSet.getString("order_date"));
@@ -92,7 +90,7 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
 
     @Override
     public List<Order> readOrdersByCustomerId(Integer customerId) throws PersistentException {
-        String sql = "SELECT order_id, cart_id, order_price, order_status,"
+        String sql = "SELECT order_id, order_price, order_status,"
                 + " order_date, shipping_address"
                 + " FROM orders WHERE customer_id = ?";
 
@@ -107,7 +105,6 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
                     Order order
                             = new Order(resultSet.getInt("order_id"),
                             customerId,
-                            resultSet.getInt("cart_id"),
                             resultSet.getDouble("order_price"),
                             resultSet.getString("order_status"),
                             resultSet.getString("order_date"),

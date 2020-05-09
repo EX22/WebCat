@@ -32,17 +32,19 @@ ENGINE=InnoDB
 ;
 
 CREATE TABLE IF NOT EXISTS `cart_content` (
-	`cart_id` INT(11) NULL DEFAULT NULL,
-	`product_id` INT(11) NULL DEFAULT NULL,
-	`product_count` INT(11) NOT NULL,
-	INDEX `FK__cart` (`cart_id`),
-	INDEX `FK__products` (`product_id`),
-	CONSTRAINT `FK__cart` FOREIGN KEY (`cart_id`) REFERENCES `cart` (`cart_id`),
-	CONSTRAINT `FK__products` FOREIGN KEY (`product_id`) REFERENCES `products` (`product_id`)
+	`customer_id` INT(11) NOT NULL,
+	`product_id` INT(11) NOT NULL,
+	`product_count` INT(11) NULL DEFAULT NULL,
+	INDEX `FK__products` (`product_id`) USING BTREE,
+	INDEX `FK__customer_id` (`customer_id`) USING BTREE,
+	PRIMARY KEY (`customer_id`, `product_id`),
+	CONSTRAINT `FK__products` FOREIGN KEY (`product_id`) REFERENCES `web_cat`.`products` (`product_id`) ON UPDATE RESTRICT ON DELETE RESTRICT,
+	CONSTRAINT `customer_id` FOREIGN KEY (`customer_id`) REFERENCES `web_cat`.`customers` (`customer_id`) ON UPDATE RESTRICT ON DELETE RESTRICT
 )
 COLLATE='utf8_general_ci'
 ENGINE=InnoDB
 ;
+
 
 
 
@@ -99,19 +101,19 @@ ENGINE=InnoDB
 CREATE TABLE IF NOT EXISTS `orders` (
 	`order_id` INT(11) NOT NULL AUTO_INCREMENT,
 	`customer_id` INT(11) NOT NULL,
-	`cart_id` INT(11) NOT NULL,
 	`order_price` DOUBLE(22,0) NOT NULL,
 	`order_status` VARCHAR(50) NOT NULL COLLATE 'utf8_general_ci',
 	`order_date` VARCHAR(50) NOT NULL COLLATE 'utf8_general_ci',
 	`shipping_address` VARCHAR(250) NOT NULL COLLATE 'utf8_general_ci',
 	PRIMARY KEY (`order_id`) USING BTREE,
 	INDEX `FK_orders_customers` (`customer_id`) USING BTREE,
-	INDEX `FK_orders_cart` (`cart_id`) USING BTREE,
-	CONSTRAINT `FK_orders_cart` FOREIGN KEY (`cart_id`) REFERENCES `web_cat`.`cart` (`cart_id`) ON UPDATE RESTRICT ON DELETE RESTRICT,
 	CONSTRAINT `FK_orders_customers` FOREIGN KEY (`customer_id`) REFERENCES `web_cat`.`customers` (`customer_id`) ON UPDATE RESTRICT ON DELETE RESTRICT
 )
 COLLATE='utf8_general_ci'
 ENGINE=InnoDB
+AUTO_INCREMENT=4
+;
+
 ;
 
 
@@ -155,8 +157,8 @@ CREATE TABLE IF NOT EXISTS `products_category` (
 	`product_id` INT(11) NOT NULL,
 	`cateory_id` INT(11) NOT NULL,
 	INDEX `Index 1` (`product_id`),
-	INDEX `Index 2` (`cateory_id`),
-	CONSTRAINT `FK_products_category_category` FOREIGN KEY (`cateory_id`) REFERENCES `category` (`category_id`),
+	INDEX `Index 2` (`category_id`),
+	CONSTRAINT `FK_products_category_category` FOREIGN KEY (`category_id`) REFERENCES `category` (`category_id`),
 	CONSTRAINT `FK_products_category_products` FOREIGN KEY (`product_id`) REFERENCES `products` (`product_id`)
 )
 COLLATE='utf8_general_ci'

@@ -1,10 +1,8 @@
 package by.khomenko.nsp.webcat.client.servlet.command;
 
-import by.khomenko.nsp.webcat.common.dao.CartDao;
-import by.khomenko.nsp.webcat.common.dao.CustomerDao;
-import by.khomenko.nsp.webcat.common.dao.DaoFactory;
-import by.khomenko.nsp.webcat.common.dao.OrderDao;
+import by.khomenko.nsp.webcat.common.dao.*;
 import by.khomenko.nsp.webcat.common.entity.Cart;
+import by.khomenko.nsp.webcat.common.entity.CartContent;
 import by.khomenko.nsp.webcat.common.entity.Customer;
 import by.khomenko.nsp.webcat.common.entity.Order;
 import by.khomenko.nsp.webcat.common.exception.PersistentException;
@@ -34,15 +32,15 @@ public class ProfileCommand implements BaseCommand {
 
         try (CustomerDao customerDao = DaoFactory.getInstance().createDao(CustomerDao.class);
              OrderDao orderDao = DaoFactory.getInstance().createDao(OrderDao.class);
-             CartDao cartDao = DaoFactory.getInstance().createDao(CartDao.class)) {
+             CartContentDao cartContentDao = DaoFactory.getInstance().createDao(CartContentDao.class)) {
 
             Customer customer = customerDao.read(customerId);
             List<Order> customerOrdersList = orderDao.readOrdersByCustomerId(customerId);
-            Cart customerCart = cartDao.readCartByCustomerId(customerId);
+            CartContent cartContent = cartContentDao.read(customerId);
 
             map.put("customer", customer);
             map.put("customerOrdersList", customerOrdersList);
-            map.put("customerCart", customerCart);
+            map.put("customerCartContent", cartContent);
 
         } catch (Exception e) {
             LOGGER.error("Loading profile page an exception occurred.", e);

@@ -1,9 +1,11 @@
 package by.khomenko.nsp.webcat.client.servlet.command;
 
+import by.khomenko.nsp.webcat.common.dao.CartContentDao;
 import by.khomenko.nsp.webcat.common.dao.CartDao;
 import by.khomenko.nsp.webcat.common.dao.DaoFactory;
 import by.khomenko.nsp.webcat.common.dao.ProductDao;
 import by.khomenko.nsp.webcat.common.entity.Cart;
+import by.khomenko.nsp.webcat.common.entity.CartContent;
 import by.khomenko.nsp.webcat.common.entity.Product;
 import by.khomenko.nsp.webcat.common.exception.PersistentException;
 import org.apache.logging.log4j.LogManager;
@@ -25,19 +27,16 @@ public class CartCommand implements BaseCommand {
     private static final Logger LOGGER
             = LogManager.getLogger(CartCommand.class);
 
-    private Map<String, Object> load(Cart cart) throws PersistentException {
+    private Map<String, Object> load(CartContent cartContent) throws PersistentException {
 
         Map<String, Object> map = new HashMap<>();
 
-        try (ProductDao productDao = DaoFactory.getInstance().createDao(ProductDao.class);
-             CartDao cartDao = DaoFactory.getInstance().createDao(CartDao.class)) {
+        try (ProductDao productDao = DaoFactory.getInstance().createDao(ProductDao.class)) {
 
-            List<Product> products = productDao.readProductsById(cart.getProducts().keySet());
+            List<Product> products = productDao.readProductsById(cartContent.getProducts().keySet());
+            cartContent.setProductInfo(products);
 
-            cartDao.create(cart);
-
-            map.put("products", products);
-            map.put("cart", cart);
+            map.put("cartContent", cartContent);
 
         } catch (Exception e) {
             LOGGER.error("Loading cart page an exception occurred.", e);
@@ -47,19 +46,39 @@ public class CartCommand implements BaseCommand {
         return map;
     }
 
+    private <T>T getObjectFromSession(Class<T> cartContentClass,
+                                      String attributeName, HttpServletRequest request) {
+
+        Object cartObj = request.getSession().getAttribute(attributeName);
+        T result = null;
+
+        if (cartObj != null){
+            result = (T) cartObj;
+        }
+        return result;
+    }
+
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-        try {
+        try (CartContentDao cartContentDao = DaoFactory.getInstance().createDao(CartContentDao.class)){
 
-            //debug
-            //request.getSession().removeAttribute("cart");
+            CartContent cartContent = getObjectFromSession(CartContent.class,
+                    "cartContent", request);
 
-            Object cartObj = request.getSession().getAttribute("cart");
-            Cart cart = null;
+            Integer customerId = getObjectFromSession(Integer.class,
+                    "customerId", request);
 
-            if (cartObj != null){
-                cart = (Cart)cartObj;
+            if (cartContent == null){
+
+                if (customerId == null){
+                    cartContent = new CartContent();
+                } else {
+                    cartContent = cartContentDao.read(customerId);
+                }
+
+                request.getSession().setAttribute("cartContent", cartContent);
+
             }
 
             String productId = request.getParameter("id");
@@ -68,37 +87,14 @@ public class CartCommand implements BaseCommand {
 
                 Integer pId = Integer.parseInt(productId);
 
-                 if (cart == null){
-                    cart = new Cart();
-                    request.getSession().setAttribute("cart", cart);
-                }
+                cartContent.addProduct(pId);
+                cartContentDao.update(cartContent);
 
-                cart.addProduct(pId);
-
-                //TODO Cart's item quantity
-                response.getWriter().print("100");
-                //return;
-            }
-
-            Map<String, Object> cartMap = new HashMap<>();
-
-            if (cart == null){
-
-                Object customerIdObj = request.getSession().getAttribute("customerId");
-                cart = new Cart();
-
-                if (customerIdObj != null){
-
-                    cart.setCustomerId((Integer)customerIdObj);
-                }
-
-                request.getSession().setAttribute("cart", cart);
+                response.getWriter().print(cartContent.getProducts().entrySet().size());
+                return;
 
             }
-
-            if(!cart.getProducts().keySet().isEmpty()) {
-                cartMap = load(cart);
-            }
+            Map<String, Object> cartMap = load(cartContent);
 
             for (String key : cartMap.keySet()) {
                 request.setAttribute(key, cartMap.get(key));
@@ -112,5 +108,7 @@ public class CartCommand implements BaseCommand {
             response.sendRedirect("error.html");
         }
     }
+
+
 
 }

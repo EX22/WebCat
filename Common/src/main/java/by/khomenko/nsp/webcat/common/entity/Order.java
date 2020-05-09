@@ -15,7 +15,6 @@ public class Order extends Entity {
 
     private Integer orderId;
     private Integer customerId;
-    private Integer cartId;
     private double orderPrice;
     private String orderStatus;
     private String orderDate;
