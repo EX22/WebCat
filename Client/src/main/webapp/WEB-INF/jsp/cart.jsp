@@ -31,32 +31,34 @@
             <span class="text-muted">Your cart</span>
             <span class="badge badge-secondary badge-pill">Products amount <c:out value=""/></span>
           </h4>
-          <ul class="list-group mb-3">
-              <c:forEach var="product" items="${cartContent.productInfo}" varStatus="loop">
-                  <div class="card mb-3" style="max-width: 540px;">
-                    <div class="row no-gutters">
-                      <div class="col-md-4">
-                        <img src="/images/${product.value.photoPath}" class="card-img" alt="...">
-                      </div>
-                      <div class="col-md-8">
-                        <div class="card-body">
-                          <h5 class="card-title"><c:out value="${product.value.productName}"/></h5>
-                          <p class="card-text"><c:out value="${product.value.productPrice}"/>$</p>
-                          <a href="#" class="badge badge-secondary">Remove</a>
-                          <div class="form-row align-items-center">
-                              <div class="col-auto my-1">
-                                <label class="my-1 mr-2" for="inlineFormCustomSelectPref">Quantity</label>
-                                <input type="text" class="form-control" value="${cartContent.products[product.value.productId]}"/>
+          <form class="card p-2">
+              <ul class="list-group mb-3">
+                  <c:forEach var="product" items="${cartContent.productInfo}" varStatus="loop">
+                      <div class="card mb-3" style="max-width: 540px;">
+                        <div class="row no-gutters">
+                          <div class="col-md-4">
+                            <img src="/images/${product.value.photoPath}" class="card-img" alt="...">
+                          </div>
+                          <div class="col-md-8">
+                            <div class="card-body">
+                              <h5 class="card-title"><c:out value="${product.value.productName}"/></h5>
+                              <p class="card-text"><c:out value="${product.value.productPrice}"/>$</p>
+                              <button type="submit" class="btn btn-primary btn-sm"
+                                        name="productIdToRemove" value="${product.value.productId}">Remove this product</button>
+                              <div class="form-row align-items-center">
+                                  <div class="col-auto my-1">
+                                    <label class="my-1 mr-2" for="inlineFormCustomSelectPref">Quantity</label>
+                                    <input type="text" class="form-control" value="${cartContent.products[product.value.productId]}"/>
+                                  </div>
                               </div>
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                  </div>
-              </c:forEach>
-          </ul>
+                  </c:forEach>
+              </ul>
 
-          <form class="card p-2">
+
             <div class="input-group">
               <input type="text" class="form-control" placeholder="Promo code"/>
               <div class="input-group-append">

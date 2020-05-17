@@ -12,18 +12,16 @@ public class Contacts extends Entity {
 
     private Integer id;
     private Integer customerId;
-    private String lastName;
     private String shippingAddress;
     private String country;
     private String state;
     private String zipCode;
 
-    public Contacts (Integer customerId, String customerLastName,
+    public Contacts (Integer customerId,
                      String customerAddress, String customerCountry,
                      String customerState, String customerZipCode) {
 
         this.customerId = customerId;
-        this.lastName = customerLastName;
         this.shippingAddress = customerAddress;
         this.country = customerCountry;
         this.state = customerState;
@@ -32,8 +30,7 @@ public class Contacts extends Entity {
 
     @Override
     public String toString() {
-        return "lastName='" + lastName + '\''
-                + ", shippingAddress='" + shippingAddress + '\''
+        return " shippingAddress='" + shippingAddress + '\''
                 + ", country='" + country + '\''
                 + ", state='" + state + '\''
                 + ", zipCode='" + zipCode + '\'';

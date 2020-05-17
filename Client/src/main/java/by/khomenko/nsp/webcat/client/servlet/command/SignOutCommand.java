@@ -22,6 +22,7 @@ public class SignOutCommand implements BaseCommand {
         try {
 
             request.getSession().removeAttribute("customerId");
+            request.getSession().removeAttribute("customer");
             response.sendRedirect("signin.html");
 
         } catch (Exception e) {

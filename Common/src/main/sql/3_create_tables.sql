@@ -22,14 +22,6 @@ ENGINE=InnoDB
 ;
 
 
-CREATE TABLE IF NOT EXISTS `cart` (
-	`cart_id` INT(11) NOT NULL AUTO_INCREMENT,
-	`customer_id` INT(11) NULL DEFAULT NULL,
-	PRIMARY KEY (`cart_id`)
-)
-COLLATE='utf8_general_ci'
-ENGINE=InnoDB
-;
 
 CREATE TABLE IF NOT EXISTS `cart_content` (
 	`customer_id` INT(11) NOT NULL,
@@ -65,6 +57,7 @@ CREATE TABLE IF NOT EXISTS `customers` (
 	`login` VARCHAR(150) NOT NULL,
 	`password` VARCHAR(250) NOT NULL,
 	`name` VARCHAR(250) NULL DEFAULT NULL,
+	`last_name` VARCHAR(250) NULL DEFAULT NULL COLLATE,
 	`phone_number` VARCHAR(355) NULL DEFAULT NULL,
 	`email` VARCHAR(355) NULL DEFAULT NULL,
 	`ip` VARCHAR(150) NULL DEFAULT NULL,
@@ -81,7 +74,6 @@ ENGINE=InnoDB
 CREATE TABLE IF NOT EXISTS `customer_contacts` (
     `id` INT(11) NOT NULL AUTO_INCREMENT,
 	`customer_id` INT(11) NULL DEFAULT NULL,
-	`last_name` VARCHAR(250) NULL DEFAULT NULL COLLATE 'utf8_general_ci',
 	`shipping_address` VARCHAR(250) NULL DEFAULT NULL COLLATE 'utf8_general_ci',
 	`country` VARCHAR(250) NULL DEFAULT NULL COLLATE 'utf8_general_ci',
 	`state` VARCHAR(250) NULL DEFAULT NULL COLLATE 'utf8_general_ci',

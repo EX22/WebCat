@@ -63,112 +63,119 @@
           </form>
         </div>
 
-        <c:if test="${customer != null && not empty customer.contactsList}">
-            <div class="col-md-8 order-md-1">
+        <c:choose>
+            <c:when test="${customer != null && not empty customer.contactsList}">
+                <div class="col-md-8 order-md-1">
+                      <h4 class="mb-3">Shipping address</h4>
+                      <form method="post" class="needs-validation" novalidate
+                        onsubmit="return true" id="selectAddressCheckOutForm">
+                        <input type = "hidden" value = "selectAddress" name="action"/>
+                        <c:forEach var="contacts" items="${customer.contactsList}" varStatus="loop">
+                            <input type="radio" id="${contacts.id}" name="selectedContactsId" value="${contacts.id}">
+                            <label for="${contacts.id}"><c:out value="${contacts.shippingAddress}"/></label><br>
+                        </c:forEach>
+                        <hr class="mb-4">
+                            <button class="btn btn-primary btn-lg btn-block" type="submit">To place an order</button>
+                      </form>
+                </div>
+            </c:when>
+            <c:otherwise>
+                <div class="col-md-8 order-md-1">
                   <h4 class="mb-3">Shipping address</h4>
                   <form method="post" class="needs-validation" novalidate
-                    onsubmit="return true" id="selectAddressCheckOutForm">
-                    <input type = "hidden" value = "selectAddress" name="action"/>
-                    <c:forEach var="contacts" items="${customer.contactsList}" varStatus="loop">
+                    onsubmit="return validateCheckOutForm()" id="checkOutForm">
+                    <input type = "hidden" value = "newAddress" name="action"/>
+                    <div class="row">
+                      <div class="col-md-6 mb-3">
+                        <label for="firstName">First name</label>
+                        <input type="text" class="form-control" id="firstName" name="customerFirstName"
+                                    placeholder="${customer.name}" value="${customer.name}" required>
+                        <div class="invalid-feedback">
+                          Valid first name is required.
+                        </div>
+                      </div>
+                      <div class="col-md-6 mb-3">
+                        <label for="lastName">Last name</label>
+                        <input type="text" class="form-control" id="lastName" name="customerLastName"
+                                    placeholder="${customer.lastName}" value="${customer.lastName}" required>
+                        <div class="invalid-feedback">
+                          Valid last name is required.
+                        </div>
+                      </div>
+                    </div>
 
-                        <input type="radio" id="${contacts.id}" name="selectedContacts" value="${contacts.id}">
-                        <label for="${contacts.id}"><c:out value="${contacts.shippingAddress}"/></label><br>
-                    </c:forEach>
+                    <div class="mb-3">
+                      <label for="email">Email/Login</label>
+                      <input type="email" class="form-control" id="email" name="customerEmail"
+                                placeholder="${customer.login}" value="${customer.login}" required>
+                      <div class="invalid-feedback">
+                        Please enter a valid email address for shipping updates.
+                      </div>
+                    </div>
+
+                    <div class="mb-3">
+                      <label for="phone">Phone number</label>
+                      <input type="text" class="form-control" id="phone" name="customerPhone"
+                                placeholder="${customer.phoneNumber}" value="${customer.phoneNumber}" required>
+                      <div class="invalid-feedback">
+                        Please enter your phone number.
+                      </div>
+                    </div>
+
+                    <div class="mb-3">
+                      <label for="address">Shipping address</label>
+                      <input type="text" class="form-control" id="address" name="customerShippingAddress"
+                                placeholder="" required>
+                      <div class="invalid-feedback">
+                        Please enter your shipping address.
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-md-5 mb-3">
+                        <label for="country">Country</label>
+                        <select class="custom-select d-block w-100" id="country" name="customerCountry" required>
+                          <option value="">Choose...</option>
+                          <option>Belarus</option>
+                          <option>Russia</option>
+                          <option>Ukraine</option>
+                        </select>
+                        <div class="invalid-feedback">
+                          Please select a valid country.
+                        </div>
+                      </div>
+                      <div class="col-md-4 mb-3">
+                        <label for="state">State</label>
+                        <select class="custom-select d-block w-100" id="state" name="customerState" required>
+                          <option value="">Choose...</option>
+                          <option>Minsk</option>
+                          <option>Moscow</option>
+                          <option>Kiev</option>
+                        </select>
+                        <div class="invalid-feedback">
+                          Please provide a valid state.
+                        </div>
+                      </div>
+                      <div class="col-md-3 mb-3">
+                        <label for="zip">Zip</label>
+                        <input type="text" class="form-control" id="zip" name="customerZipCode" placeholder="" required>
+                        <div class="invalid-feedback">
+                          Zip code required.
+                        </div>
+                      </div>
+                    </div>
                     <hr class="mb-4">
-                        <button class="btn btn-primary btn-lg btn-block" type="submit">To place an order</button>
+                    <div class="custom-control custom-checkbox">
+                      <input type="checkbox" class="custom-control-input" id="save-info">
+                      <label class="custom-control-label" for="save-info">Save this information for the next time</label>
+                    </div>
+
+                    <hr class="mb-4">
+                    <button class="btn btn-primary btn-lg btn-block" type="submit">To place an order</button>
                   </form>
-            </div>
-        </c:if>
-
-        <div class="col-md-8 order-md-1">
-          <h4 class="mb-3">Shipping address</h4>
-          <form method="post" class="needs-validation" novalidate
-            onsubmit="return validateCheckOutForm()" id="checkOutForm">
-            <input type = "hidden" value = "newAddress" name="action"/>
-            <div class="row">
-              <div class="col-md-6 mb-3">
-                <label for="firstName">First name</label>
-                <input type="text" class="form-control" id="firstName" name="customerFirstName" placeholder="${customer.name}" value="" required>
-                <div class="invalid-feedback">
-                  Valid first name is required.
                 </div>
-              </div>
-              <div class="col-md-6 mb-3">
-                <label for="lastName">Last name</label>
-                <input type="text" class="form-control" id="lastName" name="customerLastName" placeholder="" value="" required>
-                <div class="invalid-feedback">
-                  Valid last name is required.
-                </div>
-              </div>
-            </div>
-
-            <div class="mb-3">
-              <label for="email">Email/Login</label>
-              <input type="email" class="form-control" id="email" name="customerEmail" placeholder="${customer.login}">
-              <div class="invalid-feedback">
-                Please enter a valid email address for shipping updates.
-              </div>
-            </div>
-
-            <div class="mb-3">
-              <label for="phone">Phone number</label>
-              <input type="text" class="form-control" id="phone" name="customerPhone" placeholder="+${customer.phoneNumber}" required>
-              <div class="invalid-feedback">
-                Please enter your phone number.
-              </div>
-            </div>
-
-            <div class="mb-3">
-              <label for="address">Shipping address</label>
-              <input type="text" class="form-control" id="address" name="customerShippingAddress" placeholder="" required>
-              <div class="invalid-feedback">
-                Please enter your shipping address.
-              </div>
-            </div>
-
-            <div class="row">
-              <div class="col-md-5 mb-3">
-                <label for="country">Country</label>
-                <select class="custom-select d-block w-100" id="country" name="customerCountry" required>
-                  <option value="">Choose...</option>
-                  <option>Belarus</option>
-                  <option>Russia</option>
-                  <option>Ukraine</option>
-                </select>
-                <div class="invalid-feedback">
-                  Please select a valid country.
-                </div>
-              </div>
-              <div class="col-md-4 mb-3">
-                <label for="state">State</label>
-                <select class="custom-select d-block w-100" id="state" name="customerState" required>
-                  <option value="">Choose...</option>
-                  <option>Minsk</option>
-                  <option>Moscow</option>
-                  <option>Kiev</option>
-                </select>
-                <div class="invalid-feedback">
-                  Please provide a valid state.
-                </div>
-              </div>
-              <div class="col-md-3 mb-3">
-                <label for="zip">Zip</label>
-                <input type="text" class="form-control" id="zip" name="customerZipCode" placeholder="" required>
-                <div class="invalid-feedback">
-                  Zip code required.
-                </div>
-              </div>
-            </div>
-            <hr class="mb-4">
-            <div class="custom-control custom-checkbox">
-              <input type="checkbox" class="custom-control-input" id="save-info">
-              <label class="custom-control-label" for="save-info">Save this information for next time</label>
-            </div>
-
-            <hr class="mb-4">
-            <button class="btn btn-primary btn-lg btn-block" type="submit">To place an order</button>
-          </form>
-        </div>
+            </c:otherwise>
+        </c:choose>
       </div>
     </div>
 

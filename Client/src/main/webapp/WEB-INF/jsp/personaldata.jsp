@@ -28,8 +28,8 @@
       <div class="row">
 
         <div class="col-md-8 order-md-1">
-          <h4 class="mb-3">Personal data</h4>
-          <hr class="mb-4">
+            <h4 class="mb-3">Personal data</h4>
+            <hr class="mb-4">
             <div class="row">
                   <div class="col-md-6 mb-3">
                     <h5><label for="firstName">First name</label></h5>
@@ -37,43 +37,32 @@
                   </div>
               <div class="col-md-6 mb-3">
                 <h5><label for="lastName">Last name</label></h5>
-                <input type="text" readonly class="form-control-plaintext" id="lastName" value="LastnameExample">
+                <input type="text" readonly class="form-control-plaintext" id="lastName" value="${customer.lastName}">
               </div>
             </div>
-          <hr class="mb-4">
+            <hr class="mb-4">
             <div class="mb-3">
               <h5><label for="email">Email/Login</label></h5>
               <input type="email" readonly class="form-control-plaintext" id="email" value="${customer.login}">
             </div>
-          <hr class="mb-4">
+            <hr class="mb-4">
             <div class="mb-3">
               <h5><label for="phone">Phone number</label></h5>
-              <input type="text" readonly class="form-control-plaintext" id="phone" value="+${customer.phoneNumber}">
+              <input type="text" readonly class="form-control-plaintext" id="phone" value="${customer.phoneNumber}">
             </div>
-          <hr class="mb-4">
+            <hr class="mb-4">
             <div class="mb-3">
               <h5><label for="address">Shipping address</label></h5>
-              <input type="text" readonly class="form-control-plaintext" id="address" value="Lahojski trakt 28/1">
+              <c:forEach var="contacts" items="${customer.contactsList}" varStatus="loop">
+                  <label for="${contacts.id}"><c:out value="${contacts.shippingAddress}"/></label><br>
+                  <label for="${contacts.id}"><c:out value="${contacts.country}"/></label><br>
+                  <label for="${contacts.id}"><c:out value="${contacts.state}"/></label><br>
+                  <label for="${contacts.id}"><c:out value="${contacts.zipCode}"/></label><br>
+                  <hr class="mb-4">
+              </c:forEach>
             </div>
-          <hr class="mb-4">
-            <div class="row">
-              <div class="col-md-5 mb-3">
-                <h5><label for="country">Country</label></h5>
-                  <input type="text" readonly class="form-control-plaintext" id="country" value="Belarus">
-              </div>
-              <div class="col-md-4 mb-3">
-                <h5><label for="state">State</label></h5>
-                <input type="text" readonly class="form-control-plaintext" id="state" value="Minsk">
-              </div>
-              <div class="col-md-3 mb-3">
-                <h5><label for="zip">Zip</label></h5>
-                <input type="text" readonly class="form-control-plaintext" id="zip" value="220017">
-              </div>
-            </div>
-          <hr class="mb-4">
         </div>
       </div>
-
     </div>
 
     <jsp:include page="footer.jsp"/>

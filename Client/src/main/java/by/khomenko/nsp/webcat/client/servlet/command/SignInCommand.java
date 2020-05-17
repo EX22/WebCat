@@ -34,13 +34,11 @@ public class SignInCommand implements BaseCommand {
                 return null;
             }
 
-
         } catch (Exception e) {
             LOGGER.error("Checking customer in `customers` table "
                     + "an exception occurred. ", e);
             throw new PersistentException(e);
         }
-
         return loggedCustomer;
     }
 

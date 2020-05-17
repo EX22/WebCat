@@ -15,6 +15,7 @@ public class Customer extends Entity {
     private String login;
     private String password;
     private String name;
+    private String lastName;
     private List<Contacts> contactsList;
     private String phoneNumber;
     private String ip;

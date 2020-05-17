@@ -142,13 +142,13 @@ public class CategoryDaoImpl extends BaseDaoImpl<Category> implements CategoryDa
     }
 
     @Override
-    public void delete(Integer identity) throws PersistentException {
+    public void delete(Integer categoryId) throws PersistentException {
 
-        String sql = "DELETE FROM category WHERE product_id = ?";
+        String sql = "DELETE FROM category WHERE category_id = ?";
 
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
 
-            statement.setInt(1, identity);
+            statement.setInt(1, categoryId);
             statement.executeUpdate();
         } catch (SQLException e) {
             LOGGER.error("Deleting category an exception occurred. ", e);

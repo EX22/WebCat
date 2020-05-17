@@ -8,4 +8,5 @@ import java.util.List;
 public interface ContactsDao extends Dao<Contacts> {
 
     List<Contacts> readList(Integer identity) throws PersistentException;
+    Contacts readByContactsId(Integer identity) throws PersistentException;
 }

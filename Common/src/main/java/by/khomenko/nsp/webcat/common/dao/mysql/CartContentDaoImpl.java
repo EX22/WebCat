@@ -45,22 +45,23 @@ public class CartContentDaoImpl extends BaseDaoImpl<CartContent> implements Cart
     }
 
     @Override
-    public CartContent read(Integer identity) throws PersistentException {
+    public CartContent read(Integer customerId) throws PersistentException {
 
-        String sql = "SELECT product_id, product_count FROM cart_content WHERE customer_id = ?";
+        String sql = "SELECT customer_id, product_id, product_count "
+                + "FROM cart_content WHERE customer_id = ?";
 
         try (PreparedStatement statement = connection.prepareStatement(sql)){
 
-            statement.setInt(1, identity);
+            statement.setInt(1, customerId);
 
             ResultSet resultSet = statement.executeQuery();
             CartContent cartContent = new CartContent();
             while (resultSet.next()){
 
+                cartContent.setCustomerId(customerId);
                 cartContent.addProduct(resultSet.getInt("product_id"),
                         resultSet.getInt("product_count"));
             }
-
             return cartContent;
         } catch (SQLException e) {
             LOGGER.error("Reading 'cart_content' table an exception occurred. ", e);
@@ -97,7 +98,35 @@ public class CartContentDaoImpl extends BaseDaoImpl<CartContent> implements Cart
     }
 
     @Override
-    public void delete(Integer identity) throws PersistentException {
+    public void deleteByProductId(Integer productId) throws PersistentException {
 
+        String sql = "DELETE FROM cart_content WHERE product_id = ?";
+
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setInt(1, productId);
+            statement.executeUpdate();
+
+        } catch (SQLException e) {
+            LOGGER.error("Deleting from cart_content table by "
+                    + "product_id an exception occurred. ", e);
+            throw new PersistentException(e);
+        }
+    }
+
+    @Override
+    public void delete(Integer customerId) throws PersistentException {
+
+        String sql = "DELETE FROM cart_content WHERE customer_id = ?";
+
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setInt(1, customerId);
+            statement.executeUpdate();
+
+        } catch (SQLException e) {
+            LOGGER.error("Deleting cart_content an exception occurred. ", e);
+            throw new PersistentException(e);
+        }
     }
 }

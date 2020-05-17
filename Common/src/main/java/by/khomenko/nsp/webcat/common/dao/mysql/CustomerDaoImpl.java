@@ -24,14 +24,15 @@ public class CustomerDaoImpl extends BaseDaoImpl<Customer> implements CustomerDa
 
     @Override
     public Integer create(Customer customer) throws PersistentException {
-        String sql = "INSERT INTO customers (login, password)"
-                + " VALUES (?, MD5(?))";
+        String sql = "INSERT INTO customers (login, password, email)"
+                + " VALUES (?, MD5(?), ?)";
 
         try (PreparedStatement statement = connection.prepareStatement(sql,
                 Statement.RETURN_GENERATED_KEYS)) {
 
             statement.setString(1, customer.getLogin());
             statement.setString(2, customer.getPassword());
+            statement.setString(3, customer.getLogin());
             statement.executeUpdate();
 
             try (ResultSet resultSet = statement.getGeneratedKeys()) {
@@ -52,8 +53,9 @@ public class CustomerDaoImpl extends BaseDaoImpl<Customer> implements CustomerDa
 
     @Override
     public Customer read(Integer identity) throws PersistentException {
-        String sql = "SELECT customer_id, login, password, name, phone_number, "
-                + "email, ip, location, customer_status, discount FROM customers WHERE customer_id = ?";
+        String sql = "SELECT customer_id, login, password, name, last_name, phone_number, "
+                + "email, ip, location, customer_status, discount "
+                + "FROM customers WHERE customer_id = ?";
 
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
 
@@ -67,6 +69,7 @@ public class CustomerDaoImpl extends BaseDaoImpl<Customer> implements CustomerDa
                     customer.setLogin(resultSet.getString("login"));
                     customer.setPassword(resultSet.getString("password"));
                     customer.setName(resultSet.getString("name"));
+                    customer.setLastName(resultSet.getString("last_name"));
                     customer.setPhoneNumber(resultSet.getString("phone_number"));
                     customer.setIp(resultSet.getString("ip"));
                     customer.setLocation(resultSet.getString("location"));
@@ -86,7 +89,7 @@ public class CustomerDaoImpl extends BaseDaoImpl<Customer> implements CustomerDa
 
     @Override
     public Customer read(String login, String password) throws PersistentException {
-        String sql = "SELECT customer_id, login, password, name, phone_number, "
+        String sql = "SELECT customer_id, login, password, name, last_name, phone_number, "
                 + "email, ip, location, customer_status, discount "
                 + "FROM customers WHERE login = ? AND password = MD5(?)";
 
@@ -104,11 +107,15 @@ public class CustomerDaoImpl extends BaseDaoImpl<Customer> implements CustomerDa
                     customer.setLogin(resultSet.getString("login"));
                     customer.setPassword(resultSet.getString("password"));
                     customer.setName(resultSet.getString("name"));
+                    customer.setLastName(resultSet.getString("last_name"));
                     customer.setPhoneNumber(resultSet.getString("phone_number"));
                     customer.setIp(resultSet.getString("ip"));
                     customer.setLocation(resultSet.getString("location"));
                     customer.setStatus(resultSet.getString("customer_status"));
                     customer.setDiscount(resultSet.getDouble("discount"));
+                    ContactsDao contactsDao = DaoFactory.getInstance().createDao(ContactsDao.class);
+                    customer.setContactsList(contactsDao
+                            .readList(resultSet.getInt("customer_id")));
 
                 }
             }
@@ -120,18 +127,24 @@ public class CustomerDaoImpl extends BaseDaoImpl<Customer> implements CustomerDa
     }
 
     @Override
-    public void updateCustomerName(Integer customerId, String name) throws PersistentException {
+    public void updateCustomerNameLastNamePhone(Integer customerId, String name,
+                                                String lastName, String customerPhone)
+            throws PersistentException {
 
-        String sql = "UPDATE customers SET name = ? WHERE customer_id = ?";
+        String sql = "UPDATE customers SET name = ?, last_name = ?, "
+                + "phone_number = ? WHERE customer_id = ?";
 
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
 
             statement.setString(1, name);
-            statement.setInt(2, customerId);
+            statement.setString(2, lastName);
+            statement.setString(3, customerPhone);
+            statement.setInt(4, customerId);
             statement.executeUpdate();
 
         } catch (SQLException e) {
-            LOGGER.error("Updating customer's name an exception occurred. ", e);
+            LOGGER.error("Updating customer's name, last name "
+                    + "and phone number an exception occurred. ", e);
             throw new PersistentException(e);
         }
 
@@ -178,7 +191,7 @@ public class CustomerDaoImpl extends BaseDaoImpl<Customer> implements CustomerDa
     @Override
     public void update(Customer customer) throws PersistentException {
 
-        String sql = "UPDATE customers SET login = ?, password = ?, name = ?,"
+        String sql = "UPDATE customers SET login = ?, password = ?, name = ?, last_name = ?,"
                 + " phone_number = ?, ip = ?, location = ?, customer_status = ?,"
                 + " discount = ?, role = ? WHERE id = ?";
 
@@ -187,13 +200,14 @@ public class CustomerDaoImpl extends BaseDaoImpl<Customer> implements CustomerDa
             statement.setString(1, customer.getLogin());
             statement.setString(2, customer.getPassword());
             statement.setString(3, customer.getName());
-            statement.setString(4, customer.getPhoneNumber());
-            statement.setString(5, customer.getIp());
-            statement.setString(6, customer.getLocation());
-            statement.setString(7, customer.getStatus());
-            statement.setDouble(8, customer.getDiscount());
-            statement.setInt(9, customer.getRole().getIdentity());
-            statement.setInt(10, customer.getId());
+            statement.setString(4, customer.getLastName());
+            statement.setString(5, customer.getPhoneNumber());
+            statement.setString(6, customer.getIp());
+            statement.setString(7, customer.getLocation());
+            statement.setString(8, customer.getStatus());
+            statement.setDouble(9, customer.getDiscount());
+            statement.setInt(10, customer.getRole().getIdentity());
+            statement.setInt(11, customer.getId());
             statement.executeUpdate();
 
         } catch (SQLException e) {

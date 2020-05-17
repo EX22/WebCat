@@ -23,6 +23,9 @@ public class CartContent extends Entity {
      * Value - product */
     private Map<Integer, Product> productInfo = new HashMap<>();
 
+    public CartContent(Integer customerId) {
+        this.customerId = customerId;
+    }
 
     public void addProduct(Integer productId, Integer productCount){
 

@@ -1,7 +1,6 @@
 package by.khomenko.nsp.webcat.client.servlet.command;
 
 import by.khomenko.nsp.webcat.common.dao.*;
-import by.khomenko.nsp.webcat.common.dao.mysql.ContactsDaoImpl;
 import by.khomenko.nsp.webcat.common.entity.*;
 import by.khomenko.nsp.webcat.common.exception.PersistentException;
 import by.khomenko.nsp.webcat.common.exception.ValidationException;
@@ -64,18 +63,17 @@ public class CheckOutCommand implements BaseCommand {
                                        String customerState, String customerZipCode)
             throws PersistentException {
 
-
         try (CustomerDao customerDao = DaoFactory.getInstance().createDao(CustomerDao.class);
              ContactsDao contactsDao = DaoFactory.getInstance().createDao(ContactsDao.class)) {
 
             if ((customerFirstName != null) && (!"".equals(customerFirstName))) {
 
-                customerDao.updateCustomerName(customerId, customerFirstName);
+                customerDao.updateCustomerNameLastNamePhone(customerId, customerFirstName,
+                        customerLastName, customerPhone);
             }
-
             Contacts contacts = null;
             if (customerId != null) {
-                contacts = new Contacts(customerId, customerLastName, customerAddress,
+                contacts = new Contacts(customerId, customerAddress,
                         customerCountry, customerState, customerZipCode);
 
                 contacts.setId(contactsDao.create(contacts));
@@ -99,7 +97,6 @@ public class CheckOutCommand implements BaseCommand {
             LocalDateTime localDateTime = LocalDateTime.now();
             DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
-
             Order newCustomerOrder = new Order(null, cartContent.getCustomerId(),
                         countOrderPrice(cartContent), Order.STATUS_NEW,
                     dateTimeFormatter.format(localDateTime),contacts.toString());
@@ -112,7 +109,6 @@ public class CheckOutCommand implements BaseCommand {
                         cartContent.getProductInfo().get(productId).getProductPrice(),
                         productCount, 0.0);
                 orderDetailsDao.create(orderDetails);
-
             }
 
         } catch (Exception e) {
@@ -161,29 +157,29 @@ public class CheckOutCommand implements BaseCommand {
     @Override
     public void execute(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-        try (CartContentDao cartContentDao = DaoFactory.getInstance().createDao(CartContentDao.class)) {
+        try (CartContentDao cartContentDao = DaoFactory.getInstance().createDao(CartContentDao.class);
+             ContactsDao contactsDao = DaoFactory.getInstance().createDao(ContactsDao.class);
+             CustomerDao customerDao = DaoFactory.getInstance().createDao(CustomerDao.class)) {
 
             Integer customerId = (Integer)request.getSession().getAttribute("customerId");
             String action = request.getParameter("action");
+            String selectedContactsId = request.getParameter("selectedContactsId");
+            String customerFirstName = request.getParameter("customerFirstName");
+            String customerLastName = request.getParameter("customerLastName");
+            String customerEmail = request.getParameter("customerEmail");
+            String customerPhone = request.getParameter("customerPhone");
+            String customerAddress = request.getParameter("customerShippingAddress");
+            String customerCountry = request.getParameter("customerCountry");
+            String customerState = request.getParameter("customerState");
+            String customerZipCode = request.getParameter("customerZipCode");
+
             Contacts contacts;
             CartContent cartContent;
-
 
             cartContent = getObjectFromSession(CartContent.class,
                         "cartContent", request);
 
-
             if ("newAddress".equals(action)) {
-
-                String customerFirstName = request.getParameter("customerFirstName");
-                String customerLastName = request.getParameter("customerLastName");
-                String customerEmail = request.getParameter("customerEmail");
-                String customerPhone = request.getParameter("customerPhone");
-                String customerAddress = request.getParameter("customerShippingAddress");
-                String customerCountry = request.getParameter("customerCountry");
-                String customerState = request.getParameter("customerState");
-                String customerZipCode = request.getParameter("customerZipCode");
-
 
                 if (customerEmail == null) {
                     //TODO Check other fields
@@ -191,33 +187,47 @@ public class CheckOutCommand implements BaseCommand {
                     response.sendRedirect("error.html");
                     return;
                 }
-
-                //TODO Check if customer exists in order to not creating new customer in DB,
-                // and entry in contacts table.
-
-                if (customerId == null) {
-
-                    customerId = createNewCustomerAccount(customerEmail);
-                    cartContent.setCustomerId(customerId);
-                    cartContentDao.create(cartContent);
-
-                    //TODO Send login and password to customer by email.
-
+                if ((customerId == null)&&(customerDao.isCustomerExist(customerEmail))) {
+                    //TODO Show message that customer has an account and should log in.
+                    response.sendRedirect("signin.html");
+                    return;
                 }
+                    if (customerId == null) {
 
-                 contacts = setCustomerContacts(customerId, customerFirstName, customerLastName, customerPhone,
-                        customerAddress, customerCountry, customerState, customerZipCode);
+                        customerId = createNewCustomerAccount(customerEmail);
+                        cartContent.setCustomerId(customerId);
+                        cartContentDao.create(cartContent);
+                        request.getSession().setAttribute("customerId", customerId);
+
+                        //TODO Send login and password to customer by email.
+
+                        contacts = setCustomerContacts(customerId, customerFirstName, customerLastName,
+                                customerPhone, customerAddress, customerCountry,
+                                customerState, customerZipCode);
+                    } else {
+                        cartContent.setCustomerId(customerId);
+                        if (selectedContactsId != null) {
+                            contacts = contactsDao.readByContactsId(Integer.parseInt(selectedContactsId));
+                        } else {
+                            contacts = setCustomerContacts(customerId, customerFirstName, customerLastName,
+                                    customerPhone, customerAddress, customerCountry,
+                                    customerState, customerZipCode);
+                        }
+                    }
 
             } else {
-                ContactsDao contactsDao = DaoFactory.getInstance().createDao(ContactsDao.class);
-                contacts = contactsDao.read(customerId);
-
+                cartContent.setCustomerId(customerId);
+                if (selectedContactsId != null) {
+                    contacts = contactsDao.readByContactsId(Integer.parseInt(selectedContactsId));
+                } else {
+                    contacts = setCustomerContacts(customerId, customerFirstName, customerLastName,
+                            customerPhone, customerAddress, customerCountry,
+                            customerState, customerZipCode);
+                }
             }
-
-
-
-
             createNewOrder(cartContent, contacts);
+            cartContentDao.delete(customerId);
+            request.getSession().removeAttribute("cartContent");
 
             response.sendRedirect("thankyoupage.html");
 
@@ -226,5 +236,4 @@ public class CheckOutCommand implements BaseCommand {
             response.sendRedirect("error.html");
         }
     }
-
 }

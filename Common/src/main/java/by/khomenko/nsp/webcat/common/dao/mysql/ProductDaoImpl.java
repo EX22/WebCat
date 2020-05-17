@@ -235,13 +235,13 @@ public class ProductDaoImpl extends BaseDaoImpl<Product> implements ProductDao {
     }
 
     @Override
-    public void delete(Integer identity) throws PersistentException {
+    public void delete(Integer productId) throws PersistentException {
 
         String sql = "DELETE FROM products WHERE product_id = ?";
 
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
 
-            statement.setInt(1, identity);
+            statement.setInt(1, productId);
             statement.executeUpdate();
         } catch (SQLException e) {
             LOGGER.error("Deleting product an exception occurred. ", e);

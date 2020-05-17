@@ -51,7 +51,6 @@ public class PersonalDataCommand implements BaseCommand {
             for (String key : personalDataMap.keySet()) {
                 request.setAttribute(key, personalDataMap.get(key));
             }
-
             request.getRequestDispatcher("WEB-INF/jsp/personaldata.jsp")
                     .forward(request, response);
 

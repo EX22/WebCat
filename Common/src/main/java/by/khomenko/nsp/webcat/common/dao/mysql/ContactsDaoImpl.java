@@ -26,20 +26,19 @@ public class ContactsDaoImpl extends BaseDaoImpl<Contacts> implements ContactsDa
 
     @Override
     public Integer create(Contacts contacts) throws PersistentException {
-        String sql = "INSERT INTO customer_contacts (customer_id, last_name,"
+        String sql = "INSERT INTO customer_contacts (customer_id,"
                 + " shipping_address, country, state, zip_code)"
-                + " VALUES (?, ?, ?, ?, ?, ?)";
+                + " VALUES (?, ?, ?, ?, ?)";
 
         try (PreparedStatement statement = connection.prepareStatement(sql,
                 Statement.RETURN_GENERATED_KEYS)) {
 
 
             statement.setInt(1, contacts.getCustomerId());
-            statement.setString(2, contacts.getLastName());
-            statement.setString(3, contacts.getShippingAddress());
-            statement.setString(4, contacts.getCountry());
-            statement.setString(5, contacts.getState());
-            statement.setString(6, contacts.getZipCode());
+            statement.setString(2, contacts.getShippingAddress());
+            statement.setString(3, contacts.getCountry());
+            statement.setString(4, contacts.getState());
+            statement.setString(5, contacts.getZipCode());
             statement.executeUpdate();
 
             try (ResultSet resultSet = statement.getGeneratedKeys()) {
@@ -59,20 +58,19 @@ public class ContactsDaoImpl extends BaseDaoImpl<Contacts> implements ContactsDa
     }
 
     @Override
-    public Contacts read(Integer identity) throws PersistentException {
-        String sql = "SELECT customer_id, last_name, shipping_address, country,"
+    public Contacts read(Integer customerId) throws PersistentException {
+        String sql = "SELECT customer_id, shipping_address, country,"
                 + " state, zip_code FROM customer_contacts  WHERE customer_id = ?";
 
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
 
-            statement.setInt(1, identity);
+            statement.setInt(1, customerId);
             Contacts contacts = null;
 
             try (ResultSet resultSet = statement.executeQuery()) {
                 if (resultSet.next()) {
                     contacts = new Contacts();
-                    contacts.setCustomerId(identity);
-                    contacts.setLastName(resultSet.getString("last_name"));
+                    contacts.setCustomerId(customerId);
                     contacts.setShippingAddress(resultSet.getString("shipping_address"));
                     contacts.setCountry(resultSet.getString("country"));
                     contacts.setState(resultSet.getString("state"));
@@ -82,18 +80,49 @@ public class ContactsDaoImpl extends BaseDaoImpl<Contacts> implements ContactsDa
             }
             return contacts;
         } catch (SQLException e) {
-            LOGGER.error("Reading table `customer_contacts` by customer id an exception occurred. ", e);
+            LOGGER.error("Reading table `customer_contacts` by customer id"
+                    + " an exception occurred. ", e);
             throw new PersistentException(e);
         }
     }
 
-    public List<Contacts> readList(Integer identity) throws PersistentException {
-        String sql = "SELECT id, customer_id, last_name, shipping_address, country,"
+    @Override
+    public Contacts readByContactsId(Integer contactsId) throws PersistentException {
+        String sql = "SELECT customer_id, shipping_address, country,"
+                + " state, zip_code FROM customer_contacts  WHERE id = ?";
+
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setInt(1, contactsId);
+            Contacts contacts = null;
+
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    contacts = new Contacts();
+                    contacts.setCustomerId(resultSet.getInt("customer_id"));
+                    contacts.setShippingAddress(resultSet.getString("shipping_address"));
+                    contacts.setCountry(resultSet.getString("country"));
+                    contacts.setState(resultSet.getString("state"));
+                    contacts.setZipCode(resultSet.getString("zip_code"));
+
+                }
+            }
+            return contacts;
+        } catch (SQLException e) {
+            LOGGER.error("Reading table `customer_contacts` by contacts id"
+                    + " an exception occurred. ", e);
+            throw new PersistentException(e);
+        }
+    }
+
+    @Override
+    public List<Contacts> readList(Integer customerId) throws PersistentException {
+        String sql = "SELECT id, customer_id, shipping_address, country,"
                 + " state, zip_code FROM customer_contacts  WHERE customer_id = ?";
 
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
 
-            statement.setInt(1, identity);
+            statement.setInt(1, customerId);
             Contacts contacts;
             List<Contacts> contactsList = new ArrayList<>();
 
@@ -101,8 +130,7 @@ public class ContactsDaoImpl extends BaseDaoImpl<Contacts> implements ContactsDa
                 while (resultSet.next()) {
                     contacts = new Contacts();
                     contacts.setId(resultSet.getInt("id"));
-                    contacts.setCustomerId(identity);
-                    contacts.setLastName(resultSet.getString("last_name"));
+                    contacts.setCustomerId(customerId);
                     contacts.setShippingAddress(resultSet.getString("shipping_address"));
                     contacts.setCountry(resultSet.getString("country"));
                     contacts.setState(resultSet.getString("state"));
@@ -122,18 +150,16 @@ public class ContactsDaoImpl extends BaseDaoImpl<Contacts> implements ContactsDa
     @Override
     public void update(Contacts contacts) throws PersistentException {
 
-        String sql = "UPDATE customer_contacts SET last_name = ?,"
-                + " shipping_address = ?, country = ?, state = ?, zip_code = ?"
-                + " WHERE customer_id = ?";
+        String sql = "UPDATE customer_contacts SET shipping_address = ?,"
+                + " country = ?, state = ?, zip_code = ? WHERE customer_id = ?";
 
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
 
-            statement.setString(1, contacts.getLastName());
-            statement.setString(2, contacts.getShippingAddress());
-            statement.setString(3, contacts.getCountry());
-            statement.setString(4, contacts.getState());
-            statement.setString(5, contacts.getZipCode());
-            statement.setInt(6, contacts.getId());
+            statement.setString(1, contacts.getShippingAddress());
+            statement.setString(2, contacts.getCountry());
+            statement.setString(3, contacts.getState());
+            statement.setString(4, contacts.getZipCode());
+            statement.setInt(5, contacts.getId());
             statement.executeUpdate();
         } catch (SQLException e) {
             LOGGER.error("Updating 'customer_contacts' table an exception occurred. ", e);

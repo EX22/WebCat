@@ -68,6 +68,7 @@ public class CartCommand implements BaseCommand {
 
             Integer customerId = getObjectFromSession(Integer.class,
                     "customerId", request);
+            String productIdToRemove = request.getParameter("productIdToRemove");
 
             if (cartContent == null){
 
@@ -76,30 +77,36 @@ public class CartCommand implements BaseCommand {
                 } else {
                     cartContent = cartContentDao.read(customerId);
                 }
-
                 request.getSession().setAttribute("cartContent", cartContent);
-
+            } else {
+                if ((customerId != null)&&(cartContent.getCustomerId() == null)) {
+                    cartContent.setCustomerId(customerId);
+                    cartContentDao.update(cartContent);
+                }
             }
-
             String productId = request.getParameter("id");
 
             if(productId != null){
 
                 Integer pId = Integer.parseInt(productId);
-
                 cartContent.addProduct(pId);
                 cartContentDao.update(cartContent);
-
                 response.getWriter().print(cartContent.getProducts().entrySet().size());
                 return;
-
             }
-            Map<String, Object> cartMap = load(cartContent);
-
-            for (String key : cartMap.keySet()) {
-                request.setAttribute(key, cartMap.get(key));
+            if ((productIdToRemove != null)&&(customerId != null)){
+                cartContentDao.deleteByProductId(Integer.parseInt(productIdToRemove));
+                cartContent = cartContentDao.read(customerId);
+                request.getSession().setAttribute("cartContent", cartContent);
             }
+            if (!cartContent.getProducts().isEmpty()) {
 
+                Map<String, Object> cartMap = load(cartContent);
+
+                for (String key : cartMap.keySet()) {
+                    request.setAttribute(key, cartMap.get(key));
+                }
+            }
             request.getRequestDispatcher("WEB-INF/jsp/cart.jsp")
                     .forward(request, response);
 

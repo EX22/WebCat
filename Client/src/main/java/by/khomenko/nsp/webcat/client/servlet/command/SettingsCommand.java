@@ -1,7 +1,9 @@
 package by.khomenko.nsp.webcat.client.servlet.command;
 
+import by.khomenko.nsp.webcat.common.dao.ContactsDao;
 import by.khomenko.nsp.webcat.common.dao.CustomerDao;
 import by.khomenko.nsp.webcat.common.dao.DaoFactory;
+import by.khomenko.nsp.webcat.common.entity.Contacts;
 import by.khomenko.nsp.webcat.common.entity.Customer;
 import by.khomenko.nsp.webcat.common.exception.PersistentException;
 import by.khomenko.nsp.webcat.common.exception.ValidationException;
@@ -37,27 +39,34 @@ public class SettingsCommand implements BaseCommand {
         return map;
     }
 
-    public void updateProfileSettings(Integer currentCustomerId,
-                                      String customerName, String currentPass,
-                                      String newPass, String confirmPass,
-                                      String customerLastName, String customerEmail,
-                                      String customerPhone, String customerAddress,
-                                      String customerCountry, String customerState,
-                                      String customerZipCode)
+    public void updateProfileSettings(Integer currentCustomerId, String customerName,
+                                      String currentPass, String newPass, String confirmPass,
+                                      String customerLastName, String customerEmail, String customerPhone,
+                                      String customerAddress, String customerCountry, String customerState,
+                                      String customerZipCode, String contactsIdToDelete)
             throws PersistentException, ValidationException {
 
         Customer loggedCustomer;
 
-        try (CustomerDao customerDao = DaoFactory.getInstance().createDao(CustomerDao.class)) {
+        try (CustomerDao customerDao = DaoFactory.getInstance().createDao(CustomerDao.class);
+             ContactsDao contactsDao = DaoFactory.getInstance().createDao(ContactsDao.class)) {
 
-            ContactsCommand contactsCommand = new ContactsCommand();
+            if (isAllNotEmpty(customerName,customerLastName,customerPhone)) {
 
-            if ((customerName != null) && (!"".equals(customerName))) {
-
-                customerDao.updateCustomerName(currentCustomerId, customerName);
+                customerDao.updateCustomerNameLastNamePhone(currentCustomerId,
+                        customerName, customerLastName, customerPhone);
             }
+            if (isAllNotEmpty(customerAddress, customerCountry,
+                    customerState, customerZipCode)) {
 
-            if ((newPass != null) && (!"".equals(newPass))) {
+                Contacts contacts = new Contacts(currentCustomerId,
+                        customerAddress, customerCountry, customerState, customerZipCode);
+                contactsDao.create(contacts);
+            }
+            if (isAllNotEmpty(contactsIdToDelete)){
+                contactsDao.delete(Integer.parseInt(contactsIdToDelete));
+            }
+            if (isAllNotEmpty(newPass)) {
                 if (newPass.equals(confirmPass)) {
 
                     loggedCustomer = customerDao.read(customerDao.read(currentCustomerId)
@@ -69,13 +78,11 @@ public class SettingsCommand implements BaseCommand {
                         throw new ValidationException("Current password is"
                                 + " false.");
                     }
-
                 } else {
                     throw new ValidationException("Password not equals to"
                             + " confirm password.");
                 }
             }
-
         } catch (ValidationException e) {
             LOGGER.error("Updating customer's profile settings an "
                     + "exception occurred.", e);
@@ -86,6 +93,16 @@ public class SettingsCommand implements BaseCommand {
             throw new PersistentException(e);
         }
 
+    }
+
+    public static boolean isAllNotEmpty(String... customerData) {
+
+        for(String oneFieldOfData : customerData) {
+            if (oneFieldOfData  == null || "".equals(oneFieldOfData .trim())) {
+                return false;
+            }
+        }
+        return true;
     }
 
 
@@ -106,19 +123,19 @@ public class SettingsCommand implements BaseCommand {
             String customerCountry = request.getParameter("customerCountry");
             String customerState = request.getParameter("customerState");
             String customerZipCode = request.getParameter("customerZipCode");
+            String contactsIdToDelete = request.getParameter("contactsIdToDelete");
 
             updateProfileSettings(customerId, customerFirstName, customerCurrentPass,
                     customerNewPass, customerConfirmPass, customerLastName, customerEmail,
-                    customerPhone, customerAddress, customerCountry, customerState, customerZipCode);
+                    customerPhone, customerAddress, customerCountry, customerState, customerZipCode,
+                    contactsIdToDelete);
 
             Map<String, Object> profileMap = loadProfileSettings(customerId);
             for (String key : profileMap.keySet()) {
                 request.setAttribute(key, profileMap.get(key));
             }
-
             request.getRequestDispatcher("WEB-INF/jsp/settings.jsp")
                     .forward(request, response);
-
         } catch (Exception e) {
             LOGGER.error("An exception in execute method in SettingsCommand class occurred.", e);
             response.sendRedirect("error.html");
