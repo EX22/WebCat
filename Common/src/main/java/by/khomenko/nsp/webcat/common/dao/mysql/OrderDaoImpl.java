@@ -58,7 +58,7 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
     }
 
     @Override
-    public Order read(Integer identity) throws PersistentException {
+    public Order read(Integer orderId) throws PersistentException {
         String sql = "SELECT customer_id, order_price, order_status,"
                 + " order_date, shipping_address"
                 + " FROM orders WHERE order_id = ?";
@@ -67,12 +67,12 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
         try (PreparedStatement statement = connection.prepareStatement(sql);
              ResultSet resultSet = statement.executeQuery()) {
 
-            statement.setInt(1, identity);
+            statement.setInt(1, orderId);
 
             Order order = null;
             if (resultSet.next()) {
                 order = new Order();
-                order.setOrderId(identity);
+                order.setOrderId(orderId);
                 order.setCustomerId(resultSet.getInt("customer_id"));
                 order.setOrderPrice(resultSet.getDouble("order_price"));
                 order.setOrderStatus(resultSet.getString("order_status"));
@@ -82,7 +82,7 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
             }
             return order;
         } catch (SQLException e) {
-            LOGGER.error("Reading from table `orders`"
+            LOGGER.error("Reading from table `orders` by order_id"
                     + " an exception occurred. ", e);
             throw new PersistentException(e);
         }
@@ -114,7 +114,7 @@ public class OrderDaoImpl extends BaseDaoImpl<Order> implements OrderDao {
             }
             return ordersList;
         } catch (SQLException e) {
-            LOGGER.error("Reading orders by customer id an exception occurred. ", e);
+            LOGGER.error("Reading orders by customer_id an exception occurred. ", e);
             throw new PersistentException(e);
         }
     }

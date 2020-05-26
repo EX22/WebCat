@@ -27,7 +27,7 @@
         <div class="col-md-4 order-md-2 mb-4">
           <h4 class="d-flex justify-content-between align-items-center mb-3">
             <span class="text-muted">Your cart</span>
-            <span class="badge badge-secondary badge-pill">Cart size <c:out value=""/></span>
+            <span class="badge badge-secondary badge-pill">Cart size <c:out value="${cartContent.productCount}"/></span>
           </h4>
           <ul class="list-group mb-3">
 
@@ -43,13 +43,13 @@
             <li class="list-group-item d-flex justify-content-between bg-light">
               <div class="text-success">
                 <h6 class="my-0">Promo code</h6>
-                <small>EXAMPLECODE</small>
+                <small>EXAMPLECODE </small>
               </div>
-              <span class="text-success">-$5</span>
+              <span class="text-success">-$0</span>
             </li>
             <li class="list-group-item d-flex justify-content-between">
               <span>Total (USD)</span>
-              <strong>$20</strong>
+              <strong>$<c:out value="${order.orderPrice}"/></strong>
             </li>
           </ul>
 

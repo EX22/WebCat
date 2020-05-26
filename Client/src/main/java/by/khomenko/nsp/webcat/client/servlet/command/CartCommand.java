@@ -69,6 +69,7 @@ public class CartCommand implements BaseCommand {
             Integer customerId = getObjectFromSession(Integer.class,
                     "customerId", request);
             String productIdToRemove = request.getParameter("productIdToRemove");
+            String productIdToAdd = request.getParameter("productIdToAdd");
 
             if (cartContent == null){
 
@@ -96,6 +97,12 @@ public class CartCommand implements BaseCommand {
             }
             if ((productIdToRemove != null)&&(customerId != null)){
                 cartContentDao.deleteByProductId(Integer.parseInt(productIdToRemove));
+                cartContent = cartContentDao.read(customerId);
+                request.getSession().setAttribute("cartContent", cartContent);
+            }
+            if(productIdToAdd != null){
+                cartContent.addProduct(Integer.parseInt(productIdToAdd));
+                cartContentDao.update(cartContent);
                 cartContent = cartContentDao.read(customerId);
                 request.getSession().setAttribute("cartContent", cartContent);
             }

@@ -29,7 +29,7 @@
         <div class="col-md-4 order-md-2 mb-4">
           <h4 class="d-flex justify-content-between align-items-center mb-3">
             <span class="text-muted">Your cart</span>
-            <span class="badge badge-secondary badge-pill">Products amount <c:out value=""/></span>
+            <span class="badge badge-secondary badge-pill">Products amount <c:out value="${cartContent.productsCount}"/></span>
           </h4>
           <form class="card p-2">
               <ul class="list-group mb-3">
@@ -43,12 +43,14 @@
                             <div class="card-body">
                               <h5 class="card-title"><c:out value="${product.value.productName}"/></h5>
                               <p class="card-text"><c:out value="${product.value.productPrice}"/>$</p>
-                              <button type="submit" class="btn btn-primary btn-sm"
+                              <button type="submit" class="btn btn-secondary btn-sm btn-block"
                                         name="productIdToRemove" value="${product.value.productId}">Remove this product</button>
+                              <button type="submit" class="btn btn-primary btn-sm btn-block"
+                                        name="productIdToAdd" value="${product.value.productId}">Add one more</button>
                               <div class="form-row align-items-center">
                                   <div class="col-auto my-1">
-                                    <label class="my-1 mr-2" for="inlineFormCustomSelectPref">Quantity</label>
-                                    <input type="text" class="form-control" value="${cartContent.products[product.value.productId]}"/>
+                                        <h5>Quantity <span class="badge badge-secondary">
+                                                <c:out value="${cartContent.products[product.value.productId]}"/></span></h5>
                                   </div>
                               </div>
                             </div>
@@ -57,7 +59,6 @@
                       </div>
                   </c:forEach>
               </ul>
-
 
             <div class="input-group">
               <input type="text" class="form-control" placeholder="Promo code"/>

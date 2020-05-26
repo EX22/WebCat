@@ -49,8 +49,12 @@ public class CartContent extends Entity {
         }
     }
 
-    public Integer getProductCount(){
+    public Integer getProductsCount(){
 
-        return products.keySet().size();
+        Integer productCount = 0;
+        for (Integer key: products.keySet())
+            productCount += products.get(key);
+
+        return productCount;
     }
 }

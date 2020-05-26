@@ -25,18 +25,19 @@ public class CheckOutCommand implements BaseCommand {
     private static final Logger LOGGER
             = LogManager.getLogger(CheckOutCommand.class);
 
-    private Map<String, Object> load(Integer customerId) throws PersistentException {
+    private Map<String, Object> load(Integer orderId) throws PersistentException {
 
         Map<String, Object> map = new HashMap<>();
 
-        try (CartContentDao cartContentDao = DaoFactory.getInstance().createDao(CartContentDao.class)) {
+        try (OrderDao orderDao = DaoFactory.getInstance().createDao(OrderDao.class)) {
 
-            CartContent cartContent = cartContentDao.read(customerId);
+            Order order = orderDao.read(orderId);
 
-            map.put("cartContent", cartContent);
+            map.put("order", order);
 
         } catch (Exception e) {
-            LOGGER.error("Loading checkout page an exception occurred.", e);
+            LOGGER.error("Loading checkout page an exception"
+                    + " in load method occurred.", e);
             throw new PersistentException(e);
         }
 
@@ -88,7 +89,7 @@ public class CheckOutCommand implements BaseCommand {
         }
     }
 
-    public void createNewOrder(CartContent cartContent, Contacts contacts)
+    public Integer createNewOrder(CartContent cartContent, Contacts contacts)
             throws PersistentException {
 
         try(OrderDao orderDao = DaoFactory.getInstance().createDao(OrderDao.class);
@@ -110,7 +111,7 @@ public class CheckOutCommand implements BaseCommand {
                         productCount, 0.0);
                 orderDetailsDao.create(orderDetails);
             }
-
+            return  orderId;
         } catch (Exception e) {
             LOGGER.error("Creating new order in CheckOutCommand class an "
                     + "exception occurred.", e);
@@ -225,7 +226,12 @@ public class CheckOutCommand implements BaseCommand {
                             customerState, customerZipCode);
                 }
             }
-            createNewOrder(cartContent, contacts);
+            Integer createdOrderId = createNewOrder(cartContent, contacts);
+            Map<String, Object> orderMap = load(createdOrderId);
+
+            for (String key : orderMap.keySet()) {
+                request.setAttribute(key, orderMap.get(key));
+            }
             cartContentDao.delete(customerId);
             request.getSession().removeAttribute("cartContent");
 
